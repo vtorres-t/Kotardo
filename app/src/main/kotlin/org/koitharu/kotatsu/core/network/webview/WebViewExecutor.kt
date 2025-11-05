@@ -21,7 +21,9 @@ import org.koitharu.kotatsu.core.parser.MangaRepository
 import org.koitharu.kotatsu.core.parser.ParserMangaRepository
 import org.koitharu.kotatsu.core.util.ext.configureForParser
 import org.koitharu.kotatsu.core.util.ext.printStackTraceDebug
+import org.koitharu.kotatsu.core.util.ext.sanitizeHeaderValue
 import org.koitharu.kotatsu.parsers.model.MangaSource
+import org.koitharu.kotatsu.parsers.util.nullIfEmpty
 import org.koitharu.kotatsu.parsers.util.runCatchingCancellable
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -100,28 +102,23 @@ class WebViewExecutor @Inject constructor(
 		}.isSuccess
 	}
 
-	private suspend fun obtainWebView(): WebView {
-		webViewCached?.get()?.let {
-			return it
-		}
-		return withContext(Dispatchers.Main.immediate) {
-			webViewCached?.get()?.let {
-				return@withContext it
-			}
-			WebView(context).also {
-				it.configureForParser(null)
-				webViewCached = WeakReference(it)
-				proxyProvider.applyWebViewConfig()
-				it.onResume()
-				it.resumeTimers()
-			}
-		}
-	}
+    @MainThread
+    private fun obtainWebView(): WebView = webViewCached?.get() ?: WebView(context).also {
+        it.configureForParser(null)
+        webViewCached = WeakReference(it)
+    }
 
 	private fun MangaSource.getUserAgent(): String? {
 		val repository = mangaRepositoryFactoryProvider.get().create(this) as? ParserMangaRepository
 		return repository?.getRequestHeaders()?.get(CommonHeaders.USER_AGENT)
 	}
+
+    @MainThread
+    fun getDefaultUserAgentSync() = runCatching {
+        obtainWebView().settings.userAgentString.sanitizeHeaderValue().trim().nullIfEmpty()
+    }.onFailure { e ->
+        e.printStackTraceDebug()
+    }.getOrNull()
 
 	@MainThread
 	private fun WebView.reset() {
