@@ -17,13 +17,16 @@ import coil3.request.ErrorResult
 import coil3.request.ImageRequest
 import coil3.request.SuccessResult
 import coil3.request.lifecycle
+import coil3.request.target
 import coil3.target.GenericViewTarget
+import coil3.target.Target
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.koitharu.kotatsu.R
 import org.koitharu.kotatsu.core.exceptions.resolve.SnackbarErrorObserver
+import org.koitharu.kotatsu.core.image.CoilImageView
 import org.koitharu.kotatsu.core.image.CoilMemoryCacheKey
 import org.koitharu.kotatsu.core.model.MangaSource
 import org.koitharu.kotatsu.core.nav.AppRouter
@@ -37,6 +40,7 @@ import org.koitharu.kotatsu.core.util.ext.getDisplayIcon
 import org.koitharu.kotatsu.core.util.ext.getDisplayMessage
 import org.koitharu.kotatsu.core.util.ext.getParcelableExtraCompat
 import org.koitharu.kotatsu.core.util.ext.getThemeColor
+import org.koitharu.kotatsu.core.util.ext.isAnimatedImage
 import org.koitharu.kotatsu.core.util.ext.mangaSourceExtra
 import org.koitharu.kotatsu.core.util.ext.observe
 import org.koitharu.kotatsu.core.util.ext.observeEvent
@@ -122,15 +126,34 @@ class ImageActivity : BaseActivity<ActivityImageBinding>(),
 	}
 
 	private fun loadImage() {
-		ImageRequest.Builder(this)
-			.data(intent.data)
-			.memoryCacheKey(intent.getParcelableExtraCompat<CoilMemoryCacheKey>(AppRouter.KEY_PREVIEW)?.data)
-			.memoryCachePolicy(CachePolicy.READ_ONLY)
-			.lifecycle(this)
-			.listener(this)
-			.mangaSourceExtra(MangaSource(intent.getStringExtra(AppRouter.KEY_SOURCE)))
-			.target(SsivTarget(viewBinding.ssiv))
-			.enqueueWith(coil)
+		val url = intent.data?.toString()
+		val isAnimated = url?.isAnimatedImage() == true
+
+		if (isAnimated) {
+			viewBinding.ssiv.isVisible = false
+			viewBinding.animatedView.isVisible = true
+			ImageRequest.Builder(this)
+				.data(intent.data)
+				.memoryCacheKey(intent.getParcelableExtraCompat<CoilMemoryCacheKey>(AppRouter.KEY_PREVIEW)?.data)
+				.memoryCachePolicy(CachePolicy.READ_ONLY)
+				.lifecycle(this)
+				.listener(this)
+				.mangaSourceExtra(MangaSource(intent.getStringExtra(AppRouter.KEY_SOURCE)))
+				.target(viewBinding.animatedView)
+				.enqueueWith(coil)
+		} else {
+			viewBinding.ssiv.isVisible = true
+			viewBinding.animatedView.isVisible = false
+			ImageRequest.Builder(this)
+				.data(intent.data)
+				.memoryCacheKey(intent.getParcelableExtraCompat<CoilMemoryCacheKey>(AppRouter.KEY_PREVIEW)?.data)
+				.memoryCachePolicy(CachePolicy.READ_ONLY)
+				.lifecycle(this)
+				.listener(this)
+				.mangaSourceExtra(MangaSource(intent.getStringExtra(AppRouter.KEY_SOURCE)))
+				.target(SsivTarget(viewBinding.ssiv))
+				.enqueueWith(coil)
+		}
 	}
 
 	private fun onImageSaved(uri: Uri) {

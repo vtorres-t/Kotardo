@@ -33,6 +33,7 @@ import org.koitharu.kotatsu.core.ui.image.TextDrawable
 import org.koitharu.kotatsu.core.ui.image.TrimTransformation
 import org.koitharu.kotatsu.core.util.ext.bookmarkExtra
 import org.koitharu.kotatsu.core.util.ext.decodeRegion
+import org.koitharu.kotatsu.core.util.ext.isAnimatedImage
 import org.koitharu.kotatsu.core.util.ext.getThemeColor
 import org.koitharu.kotatsu.core.util.ext.isNetworkError
 import org.koitharu.kotatsu.core.util.ext.mangaExtra
@@ -105,8 +106,10 @@ class CoverImageView @JvmOverloads constructor(
 		}
 	}
 
-	fun setImageAsync(page: ReaderPage) = enqueueRequest(
-		newRequestBuilder()
+	private fun isAnimatedUrl(url: String?): Boolean = url?.isAnimatedImage() == true
+
+	override fun setImageAsync(page: ReaderPage) = enqueueRequest(
+		newRequestBuilder(applyTrim = true)
 			.data(page.toMangaPage())
 			.mangaSourceExtra(page.source)
 			.build(),
@@ -120,7 +123,7 @@ class CoverImageView @JvmOverloads constructor(
 	)
 
 	fun setImageAsync(cover: Cover?) = enqueueRequest(
-		newRequestBuilder()
+		newRequestBuilder(applyTrim = !isAnimatedUrl(cover?.url))
 			.data(cover?.url)
 			.mangaSourceExtra(cover?.mangaSource)
 			.build(),
@@ -130,7 +133,7 @@ class CoverImageView @JvmOverloads constructor(
 		coverUrl: String?,
 		manga: Manga?,
 	) = enqueueRequest(
-		newRequestBuilder()
+		newRequestBuilder(applyTrim = !isAnimatedUrl(coverUrl))
 			.data(coverUrl)
 			.mangaExtra(manga)
 			.build(),
@@ -140,7 +143,7 @@ class CoverImageView @JvmOverloads constructor(
 		coverUrl: String?,
 		source: MangaSource,
 	) = enqueueRequest(
-		newRequestBuilder()
+		newRequestBuilder(applyTrim = !isAnimatedUrl(coverUrl))
 			.data(coverUrl)
 			.mangaSourceExtra(source)
 			.build(),
@@ -149,21 +152,24 @@ class CoverImageView @JvmOverloads constructor(
 	fun setImageAsync(
 		bookmark: Bookmark
 	) = enqueueRequest(
-		newRequestBuilder()
+		newRequestBuilder(applyTrim = true)
 			.data(bookmark.toMangaPage())
 			.decodeRegion(bookmark.scroll)
 			.bookmarkExtra(bookmark)
 			.build(),
 	)
 
-	override fun newRequestBuilder() = super.newRequestBuilder().apply {
-		if (trimImage) {
+	private fun newRequestBuilder(applyTrim: Boolean) = super.newRequestBuilder().apply {
+		if (trimImage && applyTrim) {
 			transformations(listOf(TrimTransformation()))
 		}
 		if (hasAspectRatio) {
 			size(CoverSizeResolver(this@CoverImageView))
 		}
 	}
+
+	@Deprecated("Use newRequestBuilder(applyTrim) instead", level = DeprecationLevel.HIDDEN)
+	override fun newRequestBuilder() = newRequestBuilder(applyTrim = true)
 
 	private inner class ErrorForegroundListener : ImageRequest.Listener {
 

@@ -34,6 +34,8 @@ import org.koitharu.kotatsu.core.util.ext.decodeRegion
 import org.koitharu.kotatsu.core.util.ext.getAnimationDuration
 import org.koitharu.kotatsu.core.util.ext.isAnimationsEnabled
 import org.koitharu.kotatsu.core.util.ext.isNetworkError
+import org.koitharu.kotatsu.core.util.ext.mangaSourceExtra
+import org.koitharu.kotatsu.reader.ui.pager.ReaderPage
 import java.util.LinkedList
 import javax.inject.Inject
 
@@ -126,6 +128,13 @@ open class CoilImageView @JvmOverloads constructor(
 	fun setImageAsync(url: String?) = enqueueRequest(
 		newRequestBuilder()
 			.data(url)
+			.build(),
+	)
+
+	open fun setImageAsync(page: ReaderPage) = enqueueRequest(
+		newRequestBuilder()
+			.data(page.toMangaPage())
+			.mangaSourceExtra(page.source)
 			.build(),
 	)
 
