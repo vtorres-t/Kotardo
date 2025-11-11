@@ -59,17 +59,18 @@ class MangaSourcesRepository @Inject constructor(
 	)
 
 	suspend fun getEnabledSources(): List<MangaSource> {
-		assimilateNewSources()
-		val order = settings.sourcesSortOrder
-        return dao.findAll(!settings.isAllSourcesEnabled, order).toSources(settings.isNsfwContentDisabled, settings.isBrokenSourcesDisabled,order)
-			.let { enabled ->
-				val external = getExternalSources()
-				val list = ArrayList<MangaSourceInfo>(enabled.size + external.size)
-				external.mapTo(list) { MangaSourceInfo(it, isEnabled = true, isPinned = true) }
-				list.addAll(enabled)
-				list
-			}
-	}
+        assimilateNewSources()
+        val order = settings.sourcesSortOrder
+        return dao.findAll(!settings.isAllSourcesEnabled, order)
+            .toSources(settings.isNsfwContentDisabled, settings.isBrokenSourcesDisabled, order)
+            .let { enabled ->
+                val external = getExternalSources()
+                val list = ArrayList<MangaSourceInfo>(enabled.size + external.size)
+                external.mapTo(list) { MangaSourceInfo(it, isEnabled = true, isPinned = true) }
+                list.addAll(enabled)
+                list
+            }
+    }
 
 	suspend fun getPinnedSources(): Set<MangaSource> {
 		assimilateNewSources()
@@ -246,7 +247,8 @@ class MangaSourcesRepository @Inject constructor(
         observeIsBrokenSourcesDisabled(),
     ) { version, skipNsfw, skipBrokenSources ->
 		if (version < BuildConfig.VERSION_CODE) {
-            val sources = dao.findAllFromVersion(version).toSources(skipNsfw, skipBrokenSources,null)
+            val sources = dao.findAllFromVersion(version)
+                .toSources(skipNsfw, skipBrokenSources,null)
 			sources.isNotEmpty()
 		} else {
 			false
