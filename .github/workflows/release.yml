@@ -10,6 +10,7 @@ on:
 
 env:
   VERSION: '9.4.6'
+  RUN_NUMBER: 1045
 
 jobs:
     build:
@@ -48,8 +49,8 @@ jobs:
               uses: chkfung/android-version-actions@v1.1
               with:
                 gradlePath: app/build.gradle
-                versionCode: ${{ github.run_number }}
-                versionName: ${{ env.VERSION }}.${{ github.run_number }}
+                versionCode: ${{ env.RUN_NUMBER + github.run_number }}
+                versionName: ${{ env.VERSION }}.${{ env.RUN_NUMBER + github.run_number }}
 
             - name: Build release APK
               run: ./gradlew assembleRelease -PSIGNING_KEY_ALIAS=$SIGNING_KEY_ALIAS -PKEYSTORE_PASSWORD=$KEYSTORE_PASSWORD -PKEYSTORE_FILE=./app/key -PSIGNING_KEY_PASSWORD=$SIGNING_KEY_PASSWORD
