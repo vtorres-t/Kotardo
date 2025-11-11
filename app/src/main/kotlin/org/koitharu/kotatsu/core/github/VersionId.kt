@@ -12,28 +12,28 @@ data class VersionId(
 ) : Comparable<VersionId> {
 
 	override fun compareTo(other: VersionId): Int {
-		var diff = major.compareTo(other.major)
-		if (diff != 0) {
-			return diff
-		}
-		diff = minor.compareTo(other.minor)
-		if (diff != 0) {
-			return diff
+        var diff = major.compareTo(other.major)
+        if (diff != 0) {
+            return diff
+        }
+        diff = minor.compareTo(other.minor)
+        if (diff != 0) {
+            return diff
         }
         diff = patch.compareTo(other.patch)
         if (diff != 0) {
             return diff
         }
-		diff = build.compareTo(other.build)
-		if (diff != 0) {
+        diff = build.compareTo(other.build)
+        if (diff != 0) {
             return diff
         }
-		diff = variantWeight(variantType).compareTo(variantWeight(other.variantType))
-		if (diff != 0) {
-			return diff
-		}
-		return variantNumber.compareTo(other.variantNumber)
-	}
+        diff = variantWeight(variantType).compareTo(variantWeight(other.variantType))
+        if (diff != 0) {
+            return diff
+        }
+        return variantNumber.compareTo(other.variantNumber)
+    }
 
 	private fun variantWeight(variantType: String) = when (variantType.lowercase(Locale.ROOT)) {
 		"a", "alpha" -> 1
