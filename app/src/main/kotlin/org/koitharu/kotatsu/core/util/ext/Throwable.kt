@@ -12,10 +12,7 @@ import okhttp3.internal.http2.StreamResetException
 import okio.FileNotFoundException
 import okio.IOException
 import okio.ProtocolException
-import org.acra.ktx.sendSilentlyWithAcra
-import org.acra.ktx.sendWithAcra
 import org.jsoup.HttpStatusException
-import org.koitharu.kotatsu.BuildConfig
 import org.koitharu.kotatsu.R
 import org.koitharu.kotatsu.core.exceptions.BadBackupFormatException
 import org.koitharu.kotatsu.core.exceptions.CaughtException
@@ -229,15 +226,6 @@ fun Throwable.isNetworkError(): Boolean {
         || this is StreamResetException
         || this is SocketException
         || this is HttpException && response.code == HttpURLConnection.HTTP_GATEWAY_TIMEOUT
-}
-
-fun Throwable.report(silent: Boolean = false) {
-    val exception = CaughtException(this)
-    if (!silent) {
-        exception.sendWithAcra()
-    } else if (!BuildConfig.DEBUG) {
-        exception.sendSilentlyWithAcra()
-    }
 }
 
 fun Throwable.isWebViewUnavailable(): Boolean {
