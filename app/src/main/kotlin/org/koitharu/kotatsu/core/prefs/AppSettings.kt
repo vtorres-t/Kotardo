@@ -61,10 +61,10 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 			?: AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 
 	val colorScheme: ColorScheme
-		get() = prefs.getEnumValue(KEY_COLOR_THEME, ColorScheme.default)
+		get() = prefs.getEnumValue(KEY_COLOR_THEME, ColorScheme.EXPRESSIVE)
 
 	val isAmoledTheme: Boolean
-		get() = prefs.getBoolean(KEY_THEME_AMOLED, false)
+		get() = prefs.getBoolean(KEY_THEME_AMOLED, true)
 
 	var mainNavItems: List<NavItem>
 		get() {
@@ -123,6 +123,9 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 		get() = prefs.getBoolean(KEY_DISABLE_NSFW, false)
 		set(value) = prefs.edit { putBoolean(KEY_DISABLE_NSFW, value) }
 
+    var isBrokenSourcesDisabled: Boolean
+        get() = prefs.getBoolean(KEY_DISABLE_BROKEN, true)
+        set(value) = prefs.edit { putBoolean(KEY_DISABLE_BROKEN, value) }
 	var appLocales: LocaleListCompat
 		get() {
 			val raw = prefs.getString(KEY_APP_LOCALE, null)
@@ -292,9 +295,6 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 	val isDynamicShortcutsEnabled: Boolean
 		get() = prefs.getBoolean(KEY_SHORTCUTS, true)
 
-	val isUnstableUpdatesAllowed: Boolean
-		get() = prefs.getBoolean(KEY_UPDATES_UNSTABLE, false)
-
 	val isPagesTabEnabled: Boolean
 		get() = prefs.getBoolean(KEY_PAGES_TAB, true)
 
@@ -345,9 +345,6 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 
 	val screenshotsPolicy: ScreenshotsPolicy
 		get() = prefs.getEnumValue(KEY_SCREENSHOTS_POLICY, ScreenshotsPolicy.ALLOW)
-
-	val isAdBlockEnabled: Boolean
-		get() = prefs.getBoolean(KEY_ADBLOCK, false)
 
 	var userSpecifiedMangaDirectories: Set<File>
 		get() {
@@ -537,16 +534,6 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 	val is32BitColorsEnabled: Boolean
 		get() = prefs.getBoolean(KEY_32BIT_COLOR, false)
 
-	val isDiscordRpcEnabled: Boolean
-		get() = prefs.getBoolean(KEY_DISCORD_RPC, false)
-
-	val isDiscordRpcSkipNsfw: Boolean
-		get() = prefs.getBoolean(KEY_DISCORD_RPC_SKIP_NSFW, false)
-
-	var discordToken: String?
-		get() = prefs.getString(KEY_DISCORD_TOKEN, null)?.trim()?.nullIfEmpty()
-		set(value) = prefs.edit { putString(KEY_DISCORD_TOKEN, value?.nullIfEmpty()) }
-
 	val isPeriodicalBackupEnabled: Boolean
 		get() = prefs.getBoolean(KEY_BACKUP_PERIODICAL_ENABLED, false)
 
@@ -566,13 +553,6 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 	var periodicalBackupDirectory: Uri?
 		get() = prefs.getString(KEY_BACKUP_PERIODICAL_OUTPUT, null)?.toUriOrNull()
 		set(value) = prefs.edit { putString(KEY_BACKUP_PERIODICAL_OUTPUT, value?.toString()) }
-
-	val isBackupTelegramUploadEnabled: Boolean
-		get() = prefs.getBoolean(KEY_BACKUP_TG_ENABLED, false)
-
-	val backupTelegramChatId: String?
-		get() = prefs.getString(KEY_BACKUP_TG_CHAT, null)?.nullIfEmpty()
-
 	val isReadingTimeEstimationEnabled: Boolean
 		get() = prefs.getBoolean(KEY_READING_TIME, true)
 
@@ -662,8 +642,6 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 
 		const val TRACK_HISTORY = "history"
 		const val TRACK_FAVOURITES = "favourites"
-
-		const val KEY_ADBLOCK = "adblock"
 		const val KEY_LIST_MODE = "list_mode_2"
 		const val KEY_LIST_MODE_HISTORY = "list_mode_history"
 		const val KEY_LIST_MODE_FAVORITES = "list_mode_favorites"
@@ -771,7 +749,6 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 		const val KEY_PREFETCH_CONTENT = "prefetch_content"
 		const val KEY_APP_LOCALE = "app_locale"
 		const val KEY_SOURCES_GRID = "sources_grid"
-		const val KEY_UPDATES_UNSTABLE = "updates_unstable"
 		const val KEY_TIPS_CLOSED = "tips_closed"
 		const val KEY_SSL_BYPASS = "ssl_bypass"
 		const val KEY_READER_AUTOSCROLL_SPEED = "as_speed"
@@ -787,6 +764,7 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 		const val KEY_IMAGES_PROXY = "images_proxy_2"
 		const val KEY_LOCAL_MANGA_DIRS = "local_manga_dirs"
 		const val KEY_DISABLE_NSFW = "no_nsfw"
+        const val KEY_DISABLE_BROKEN = "no_broken_sources"
 		const val KEY_RELATED_MANGA = "related_manga"
 		const val KEY_NAV_MAIN = "nav_main"
 		const val KEY_NAV_LABELS = "nav_labels"
@@ -813,28 +791,18 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 		const val KEY_SOURCES_ENABLED_ALL = "sources_enabled_all"
 		const val KEY_QUICK_FILTER = "quick_filter"
 		const val KEY_COLLAPSE_DESCRIPTION = "description_collapse"
-		const val KEY_BACKUP_TG_ENABLED = "backup_periodic_tg_enabled"
-		const val KEY_BACKUP_TG_CHAT = "backup_periodic_tg_chat_id"
 		const val KEY_MANGA_LIST_BADGES = "manga_list_badges"
 		const val KEY_TAGS_WARNINGS = "tags_warnings"
-		const val KEY_DISCORD_RPC = "discord_rpc"
-		const val KEY_DISCORD_RPC_SKIP_NSFW = "discord_rpc_skip_nsfw"
-		const val KEY_DISCORD_TOKEN = "discord_token"
 
 		// keys for non-persistent preferences
 		const val KEY_APP_VERSION = "app_version"
 		const val KEY_IGNORE_DOZE = "ignore_dose"
 		const val KEY_TRACKER_DEBUG = "tracker_debug"
-		const val KEY_LINK_WEBLATE = "about_app_translation"
-		const val KEY_LINK_DISCORD = "about_discord"
 		const val KEY_LINK_GITHUB = "about_github"
 		const val KEY_LINK_MANUAL = "about_help"
 		const val KEY_PROXY_TEST = "proxy_test"
 		const val KEY_OPEN_BROWSER = "open_browser"
 		const val KEY_HANDLE_LINKS = "handle_links"
-		const val KEY_BACKUP_TG = "backup_periodic_tg"
-		const val KEY_BACKUP_TG_OPEN = "backup_periodic_tg_open"
-		const val KEY_BACKUP_TG_TEST = "backup_periodic_tg_test"
 		const val KEY_CLEAR_MANGA_DATA = "manga_data_clear"
 		const val KEY_STORAGE_USAGE = "storage_usage"
 		const val KEY_WEBVIEW_CLEAR = "webview_clear"
