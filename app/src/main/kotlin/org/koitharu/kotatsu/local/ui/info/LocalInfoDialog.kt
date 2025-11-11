@@ -39,17 +39,18 @@ class LocalInfoDialog : AlertDialogFragment<DialogLocalInfoBinding>(), View.OnCl
 	override fun onViewBindingCreated(binding: DialogLocalInfoBinding, savedInstanceState: Bundle?) {
 		super.onViewBindingCreated(binding, savedInstanceState)
 		viewModel.path.observe(this) {
-			binding.textViewPath.text = it
-		}
+            binding.textViewPath.text = it
+        }
 		binding.chipCleanup.setOnClickListener(this)
         binding.chipAllcleanup.setOnClickListener(this)
-		combine(viewModel.size, viewModel.availableSize, ::Pair).observe(viewLifecycleOwner) {
-            if (it.first >= 0 && it.second >= 0) {
-                setSegments(it.first, it.second)
-            } else {
-                binding.barView.animateSegments(emptyList())
+		combine(viewModel.size, viewModel.availableSize, ::Pair)
+            .observe(viewLifecycleOwner) {
+                if (it.first >= 0 && it.second >= 0) {
+                    setSegments(it.first, it.second)
+                } else {
+                    binding.barView.animateSegments(emptyList())
+                }
             }
-        }
 		viewModel.onCleanedUp.observeEvent(viewLifecycleOwner, ::onCleanedUp)
         viewModel.onAllCleanedUp.observeEvent(viewLifecycleOwner, ::onAllCleanedUp)
 		viewModel.isCleaningUp.observe(viewLifecycleOwner) { loading ->
