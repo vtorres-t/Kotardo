@@ -39,17 +39,20 @@ class LocalInfoDialog : AlertDialogFragment<DialogLocalInfoBinding>(), View.OnCl
 	override fun onViewBindingCreated(binding: DialogLocalInfoBinding, savedInstanceState: Bundle?) {
 		super.onViewBindingCreated(binding, savedInstanceState)
 		viewModel.path.observe(this) {
-			binding.textViewPath.text = it
-		}
+            binding.textViewPath.text = it
+        }
 		binding.chipCleanup.setOnClickListener(this)
-		combine(viewModel.size, viewModel.availableSize, ::Pair).observe(viewLifecycleOwner) {
-			if (it.first >= 0 && it.second >= 0) {
-				setSegments(it.first, it.second)
-			} else {
-				binding.barView.animateSegments(emptyList())
-			}
-		}
+        binding.chipAllcleanup.setOnClickListener(this)
+		combine(viewModel.size, viewModel.availableSize, ::Pair)
+            .observe(viewLifecycleOwner) {
+                if (it.first >= 0 && it.second >= 0) {
+                    setSegments(it.first, it.second)
+                } else {
+                    binding.barView.animateSegments(emptyList())
+                }
+            }
 		viewModel.onCleanedUp.observeEvent(viewLifecycleOwner, ::onCleanedUp)
+        viewModel.onAllCleanedUp.observeEvent(viewLifecycleOwner, ::onAllCleanedUp)
 		viewModel.isCleaningUp.observe(viewLifecycleOwner) { loading ->
 			binding.chipCleanup.isClickable = !loading
 			dialog?.setCancelable(!loading)
@@ -64,8 +67,14 @@ class LocalInfoDialog : AlertDialogFragment<DialogLocalInfoBinding>(), View.OnCl
 	override fun onClick(v: View) {
 		when (v.id) {
 			R.id.chip_cleanup -> viewModel.cleanup()
+            R.id.chip_allcleanup -> viewModel.allCleanup()
 		}
 	}
+
+    private fun onAllCleanedUp(result: Boolean) {
+        val c = context ?: return
+        Toast.makeText(c, c.getString(R.string.delete_all_chapters), Toast.LENGTH_SHORT).show()
+    }
 
 	private fun onCleanedUp(result: Pair<Int, Long>) {
 		val c = context ?: return
