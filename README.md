@@ -1,10 +1,8 @@
 <div align="center">
 
-<img src="./.github/assets/vtuber.png" alt="Kotatsu Logo" title="Kotatsu" width="600"/>
+# Kotardo
 
-# Kotatsu
-
-**Kotatsu is a free and open-source manga reader for Android with built-in online content sources.**
+**Kotardo is a free and open-source manga reader for Android with built-in online content sources.**
 
 </div>
 
@@ -12,7 +10,6 @@
 
 <div align="left">
 
-* Online [manga catalogues](https://github.com/vtorres-t/kotatsu-parsers) (with 1200+ manga sources)
 * Search manga by name, genres and more filters
 * Favorites organized by user-defined categories
 * Reading history, bookmarks and incognito mode support
