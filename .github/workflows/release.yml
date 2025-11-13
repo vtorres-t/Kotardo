@@ -115,7 +115,7 @@ jobs:
               with:
                 upload_url: ${{ steps.create_release.outputs.upload_url }}
                 asset_path: ${{ steps.releaseApkArm64v8.outputs.apkfileArm64v8 }}
-                asset_name: Kotatsu_arm64v8_v${{ env.VERSION }}.${{ env.BUILD_NUMBER }}.apk
+                asset_name: Kotardo_arm64v8_v${{ env.VERSION }}.${{ env.BUILD_NUMBER }}.apk
                 asset_content_type: application/zip
 
             - name: Upload Release APK Armeabiv7a
@@ -126,5 +126,5 @@ jobs:
               with:
                 upload_url: ${{ steps.create_release.outputs.upload_url }}
                 asset_path: ${{ steps.releaseApkArmeabiv7a.outputs.apkfileArmeabiv7a }}
-                asset_name: Kotatsu_armeabiv7a_v${{ env.VERSION }}.${{ env.BUILD_NUMBER }}.apk
+                asset_name: Kotardo_armeabiv7a_v${{ env.VERSION }}.${{ env.BUILD_NUMBER }}.apk
                 asset_content_type: application/zip
