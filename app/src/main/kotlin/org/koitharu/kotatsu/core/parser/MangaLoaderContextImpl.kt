@@ -49,15 +49,13 @@ class MangaLoaderContextImpl @Inject constructor(
 ) : MangaLoaderContext() {
 
     private val webViewUserAgent by lazy { obtainWebViewUserAgent() }
-    private val jsTimeout = TimeUnit.SECONDS.toMillis(4)
 
     @Deprecated("Provide a base url")
     @SuppressLint("SetJavaScriptEnabled")
-    override suspend fun evaluateJs(script: String): String? = evaluateJs("", script)
+    override suspend fun evaluateJs(script: String): String? = evaluateJs("", script, timeout = 10000L)
 
-    override suspend fun evaluateJs(baseUrl: String, script: String): String? = withTimeout(jsTimeout) {
-        webViewExecutor.evaluateJs(baseUrl, script)
-    }
+    override suspend fun evaluateJs(baseUrl: String, script: String, timeout: Long): String? =
+        webViewExecutor.evaluateJs(baseUrl, script, timeoutMs = timeout)
 
     override fun getDefaultUserAgent(): String = webViewUserAgent
 
