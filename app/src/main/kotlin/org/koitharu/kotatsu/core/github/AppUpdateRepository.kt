@@ -53,7 +53,6 @@ class AppUpdateRepository @Inject constructor(
 		val jsonArray = okHttp.newCall(request.build())
             .await()
             .parseJsonArray()
-
         val is64 = android.os.Process.is64Bit()
 
 		android.util.Log.d("UPDATE_DEBUG", "GitHub API returned ${jsonArray.length()} releases")

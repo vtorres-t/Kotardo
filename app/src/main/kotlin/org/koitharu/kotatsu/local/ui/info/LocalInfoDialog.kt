@@ -41,9 +41,9 @@ class LocalInfoDialog : AlertDialogFragment<DialogLocalInfoBinding>(), View.OnCl
 		viewModel.path.observe(this) {
             binding.textViewPath.text = it
         }
-		binding.chipCleanup.setOnClickListener(this)
+        binding.chipCleanup.setOnClickListener(this)
         binding.chipAllcleanup.setOnClickListener(this)
-		combine(viewModel.size, viewModel.availableSize, ::Pair)
+        combine(viewModel.size, viewModel.availableSize, ::Pair)
             .observe(viewLifecycleOwner) {
                 if (it.first >= 0 && it.second >= 0) {
                     setSegments(it.first, it.second)
