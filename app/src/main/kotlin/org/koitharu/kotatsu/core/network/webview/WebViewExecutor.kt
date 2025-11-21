@@ -2,6 +2,7 @@ package org.koitharu.kotatsu.core.network.webview
 
 import android.content.Context
 import android.util.AndroidRuntimeException
+import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -31,6 +32,7 @@ import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlin.ranges.contains
 
 @Singleton
 class WebViewExecutor @Inject constructor(
@@ -56,7 +58,7 @@ class WebViewExecutor @Inject constructor(
     suspend fun evaluateJs(
         baseUrl: String?,
         script: String,
-        timeoutMs: Long = 15000L, // Give more generous time for CF redirects
+        timeoutMs: Long = 15000L,
         preserveCookies: Boolean = false
     ): String? = mutex.withLock {
         withContext(Dispatchers.Main.immediate) {
@@ -65,18 +67,23 @@ class WebViewExecutor @Inject constructor(
 
             try {
                 if (baseUrl.isNullOrEmpty()) {
-                    // Same logic for script-only evaluation
                     return@withContext suspendCoroutine { cont ->
                         webView.evaluateJavascript(script) { cont.resume(it.takeUnless { r -> r == "null" }) }
                     }
                 }
 
+                val baseUri = android.net.Uri.parse(baseUrl)
+                val originalHost = baseUri.host
+
                 suspendCoroutine { continuation ->
                     var hasResumed = false
+
                     val resumeOnce: (String?) -> Unit = { result ->
                         if (!hasResumed) {
                             hasResumed = true
-                            handler.removeCallbacksAndMessages(null) // Clean up everything
+                            handler.removeCallbacksAndMessages(null)
+                            // Immediately stop further loading/polling
+                            webView.stopLoading()
                             continuation.resume(result)
                         }
                     }
@@ -85,21 +92,16 @@ class WebViewExecutor @Inject constructor(
                         val startTime = System.currentTimeMillis()
                         override fun run() {
                             if (hasResumed) return
-
-                            if (System.currentTimeMillis() - startTime >= (timeoutMs / 2)) { // Poll for half the total timeout
-                                println("DEBUG: Polling timed out. Page might be static and empty.")
-                                resumeOnce(null)
+                            if (System.currentTimeMillis() - startTime >= timeoutMs) {
                                 return
                             }
-
                             webView.evaluateJavascript(script) { result ->
                                 if (hasResumed) return@evaluateJavascript
                                 val content = result?.takeUnless { it == "null" }
-                                if (content != null) {
-                                    println("DEBUG: Content found via polling.")
+                                if (!content.isNullOrBlank()) {
+                                    println("DEBUG: Content found via polling. Returning immediately.")
                                     resumeOnce(content)
                                 } else {
-                                    // Content not ready yet, check again
                                     handler.postDelayed(this, 1000)
                                 }
                             }
@@ -107,43 +109,49 @@ class WebViewExecutor @Inject constructor(
                     }
 
                     webView.webViewClient = object : WebViewClient() {
+                        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                            val url = request?.url ?: return false
+                            val requestHost = url.host
+                            if (originalHost != null && requestHost != null && requestHost.contains(originalHost)) {
+                                return false
+                            }
+                            println("DEBUG: Blocked redirect to external domain: $url")
+                            return true
+                        }
+
                         override fun onPageFinished(view: WebView?, url: String?) {
                             super.onPageFinished(view, url)
                             if (hasResumed || url == "about:blank") return
-
-                            println("DEBUG: onPageFinished for $url. Evaluating content...")
-
+                            println("DEBUG: onPageFinished. Checking content...")
                             view?.evaluateJavascript(script) { result ->
                                 if (hasResumed) return@evaluateJavascript
                                 val content = result?.takeUnless { it == "null" }
-
-                                if (content != null) {
-                                    println("DEBUG: Content found immediately on page finish.")
+                                if (!content.isNullOrBlank()) {
+                                    println("DEBUG: Content found on pageFinished. Returning immediately.")
                                     resumeOnce(content)
-                                } else {
-                                    println("DEBUG: No content yet. Starting poller as a fallback.")
-                                    handler.removeCallbacks(contentPoller) // Remove any previous poller
-                                    handler.postDelayed(contentPoller, 1500) // Start polling
                                 }
                             }
                         }
                     }
 
-                    handler.postDelayed({
-                        if (!hasResumed) {
-                            println("ERROR: Overall operation timed out. Forcing completion.")
-                            resumeOnce(null) // This will trigger the finally block.
-                        }
-                    }, timeoutMs)
-
-                    // Start loading
+                    val headers = mapOf("Accept-Language" to "en-EN,en;q=0.9")
                     if (preserveCookies) {
                         webView.loadDataWithBaseURL(baseUrl, " ", "text/html", null, null)
                     } else {
-                        webView.loadUrl(baseUrl)
+                        webView.loadUrl(baseUrl, headers)
                     }
+
+                    handler.postDelayed(contentPoller, 1000)
+
+                    handler.postDelayed({
+                        if (!hasResumed) {
+                            println("ERROR: Overall operation timed out.")
+                            resumeOnce(null)
+                        }
+                    }, timeoutMs)
                 }
             } finally {
+                // If already resumed, stopLoading() was called; this is a safety call.
                 webView.stopLoading()
             }
         }
