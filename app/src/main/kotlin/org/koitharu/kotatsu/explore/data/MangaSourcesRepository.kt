@@ -387,8 +387,7 @@ class MangaSourcesRepository @Inject constructor(
             if (skipBrokenSources && source.isBroken) {
                 continue
             }
-
-			if (source in allMangaSources) {
+            if (source in allMangaSources) {
 				result.add(
 					MangaSourceInfo(
 						mangaSource = source,
