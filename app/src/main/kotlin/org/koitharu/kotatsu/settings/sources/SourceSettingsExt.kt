@@ -101,6 +101,11 @@ private fun PreferenceFragmentCompat.addPreferencesFromParserRepository(reposito
 					summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 				}
 			}
+
+			is ConfigKey.DisableUpdateChecking -> {
+				// No UI - this is parser-controlled only
+				continue
+			}
 		}
 		preference.isIconSpaceReserved = false
 		preference.key = key.key
