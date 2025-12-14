@@ -17,12 +17,19 @@ android {
 	buildToolsVersion = '35.0.0'
 	namespace = 'org.koitharu.kotatsu'
 
-	defaultConfig {
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles.
+        includeInBundle = false
+    }
+
+    defaultConfig {
 		applicationId 'io.github.kotatsuredo.kotatsu'
 		minSdk = 23
 		targetSdk = 36
-		versionCode = 1086
-		versionName = '9.5.3'
+		versionCode = 1088
+		versionName = '9.5.4'
 		generatedDensities = []
 		testInstrumentationRunner 'org.koitharu.kotatsu.HiltTestRunner'
 		ksp {
