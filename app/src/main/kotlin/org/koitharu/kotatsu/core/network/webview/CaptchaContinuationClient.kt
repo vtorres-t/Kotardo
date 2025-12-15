@@ -10,7 +10,6 @@ import kotlin.coroutines.Continuation
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.util.concurrent.TimeUnit
-import kotlin.toString
 
 class CaptchaContinuationClient(
     private val cookieJar: MutableCookieJar,
@@ -45,9 +44,15 @@ class CaptchaContinuationClient(
                 .url(request.url.toString())
                 .method(request.method, null)
 
-            // Add all headers except x-requested-with
+            val blockedHeaders = setOf(
+                "sec-ch-ua",
+                "sec-ch-ua-mobile",
+                "sec-ch-ua-platform",
+                "x-requested-with",
+            )
+            // Add all headers except blocked
             request.requestHeaders.forEach { (key, value) ->
-                if (key.lowercase() != "x-requested-with") {
+                if (key.lowercase() !in blockedHeaders) {
                     requestBuilder.addHeader(key, value)
                 }
             }

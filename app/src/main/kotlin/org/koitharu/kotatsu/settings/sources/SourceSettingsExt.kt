@@ -106,6 +106,11 @@ private fun PreferenceFragmentCompat.addPreferencesFromParserRepository(reposito
 				// No UI - this is parser-controlled only
 				continue
 			}
+
+            is ConfigKey.InterceptCloudflare -> {
+                // No UI - this is parser-controlled only
+                continue
+            }
 		}
 		preference.isIconSpaceReserved = false
 		preference.key = key.key
