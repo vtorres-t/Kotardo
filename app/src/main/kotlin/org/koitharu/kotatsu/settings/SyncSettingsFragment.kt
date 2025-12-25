@@ -2,7 +2,9 @@ package org.koitharu.kotatsu.settings
 
 import android.accounts.AccountManager
 import android.accounts.AccountManagerFuture
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.FragmentResultListener
 import androidx.preference.Preference
@@ -30,6 +32,19 @@ class SyncSettingsFragment : BasePreferenceFragment(R.string.sync_settings), Fra
 	lateinit var syncController: SyncController
 
 	override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+		Log.d("AMOGUS", requireActivity().intent.data.toString())
+		val intent = activity?.intent
+		when(intent?.action) {
+			Intent.ACTION_VIEW -> {
+				when (intent.data?.host) {
+					SettingsActivity.HOST_RESET_PASSWORD -> {
+						Log.d("AMOGUS", intent.data?.query.toString())
+					}
+					else -> null
+				}
+			}
+		}
+
 		addPreferencesFromResource(R.xml.pref_sync)
 	}
 

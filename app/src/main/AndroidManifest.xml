@@ -159,6 +159,7 @@
 				<data android:scheme="kotatsu" />
 				<data android:host="about" />
 				<data android:host="sync-settings" />
+				<data android:host="reset-password" />
 			</intent-filter>
 		</activity>
 		<activity
@@ -220,6 +221,10 @@
 			android:label="@string/edit" />
 		<activity
 			android:name="org.koitharu.kotatsu.sync.ui.SyncAuthActivity"
+			android:exported="true"
+			android:label="@string/sync" />
+		<activity
+			android:name="org.koitharu.kotatsu.sync.ui.SyncAuthResetActivity"
 			android:exported="true"
 			android:label="@string/sync" />
 		<activity

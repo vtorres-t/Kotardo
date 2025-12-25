@@ -162,6 +162,7 @@ class SettingsActivity :
 				when (intent.data?.host) {
 					HOST_ABOUT -> AboutSettingsFragment()
 					HOST_SYNC_SETTINGS -> SyncSettingsFragment()
+					HOST_RESET_PASSWORD -> SyncSettingsFragment()
 					else -> null
 				}
 			}
@@ -182,9 +183,9 @@ class SettingsActivity :
 	}
 
 	companion object {
-
-		private const val HOST_ABOUT = "about"
-		private const val HOST_SYNC_SETTINGS = "sync-settings"
+		const val HOST_ABOUT = "about"
+		const val HOST_SYNC_SETTINGS = "sync-settings"
+		const val HOST_RESET_PASSWORD = "reset-password"
 		const val ARG_PREF_KEY = "pref_key"
 	}
 }
