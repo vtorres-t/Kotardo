@@ -660,4 +660,5 @@
 	<string name="confirm_password">Passwort bestätigen</string>
 	<string name="password_reset">Passwort erfolgreich zurückgesetzt</string>
 	<string name="sync_login">Melde dich an, um deine Daten zu synchronisieren</string>
+	<string name="no_reset_token">Reset-Token wurde nicht übergeben</string>
 </resources>

@@ -913,4 +913,5 @@
 	<string name="sync_auth_reset_hint">Please set a new password for your account</string>
 	<string name="confirm_password">Confirm Password</string>
 	<string name="password_reset">Password reset successfully</string>
+	<string name="no_reset_token">No reset token provided</string>
 </resources>

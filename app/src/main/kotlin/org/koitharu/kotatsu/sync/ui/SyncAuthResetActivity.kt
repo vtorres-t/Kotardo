@@ -128,7 +128,7 @@ class SyncAuthResetActivity : BaseActivity<ActivitySyncAuthResetBinding>(), View
 	}
 
 	private fun onNoTokenProvided() {
-		Toast.makeText(this, "No reset token provided", Toast.LENGTH_SHORT)
+		Toast.makeText(this, getString(R.string.no_reset_token), Toast.LENGTH_SHORT)
 			.show()
 		super.finishAfterTransition()
 	}
