@@ -1,7 +1,6 @@
 package org.koitharu.kotatsu.settings
 
 import android.accounts.AccountManager
-import android.accounts.AccountManagerFuture
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -71,7 +70,9 @@ class SyncSettingsFragment : BasePreferenceFragment(R.string.sync_settings), Fra
 				val accountType = getString(R.string.account_type_sync)
 				val account = am.getAccountsByType(accountType).firstOrNull()
 				if (account == null) {
-					am.addAccount(accountType, accountType, null, null, requireActivity(), ::onAccountUpdated, null)
+					syncController.addAccount(requireActivity()) {
+						bindSummaries()
+					}
 				} else {
 					if (!router.openSystemSyncSettings(account)) {
 						Snackbar.make(listView, R.string.operation_not_supported, Snackbar.LENGTH_SHORT).show()
@@ -85,7 +86,9 @@ class SyncSettingsFragment : BasePreferenceFragment(R.string.sync_settings), Fra
 				val accountType = getString(R.string.account_type_sync)
 				val account = am.getAccountsByType(accountType).firstOrNull()
 				if(account != null) {
-					am.removeAccount(account, requireActivity(), ::onAccountUpdated, null)
+					syncController.removeAccount(requireActivity(), account) {
+						bindSummaries()
+					}
 				}
 				true
 			}
@@ -101,21 +104,6 @@ class SyncSettingsFragment : BasePreferenceFragment(R.string.sync_settings), Fra
 	private fun bindHostSummary() {
 		val preference = findPreference<Preference>(SyncSettings.KEY_SYNC_URL) ?: return
 		preference.summary = syncSettings.syncUrl
-	}
-
-	private fun onAccountUpdated(future: AccountManagerFuture<Bundle>) {
-		val am = AccountManager.get(requireContext())
-		val accountType = getString(R.string.account_type_sync)
-		val account = am.getAccountsByType(accountType).firstOrNull()
-
-		if(account != null) {
-			syncController.setEnabled(account, syncFavorites = true, syncHistory = true)
-			viewLifecycleScope.launch {
-				syncController.requestFullSync()
-			}
-		}
-
-		bindSummaries()
 	}
 
 	private fun bindSummaries() {
