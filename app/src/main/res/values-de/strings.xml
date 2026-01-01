@@ -654,9 +654,9 @@
     <string name="reader_navigation_inverted">Steuerung umkehren</string>
     <string name="minutes_seconds_short">%1$d m %2$d s</string>
     <string name="forgot_password">Passwort vergessen</string>
-	<string name="reset_email_sent">Falls das Konto existiert, wurde eine E-Mail zum Zurücksetzen des Passworts versendet.</string>
+	<string name="reset_email_sent">Falls der Account existiert, wurde eine E-Mail zum Zurücksetzen des Passworts versendet.</string>
 	<string name="sync_auth_reset_title">Passwort zurücksetzen</string>
-	<string name="sync_auth_reset_hint">Bitte lege ein neues Passwort für dein Konto fest</string>
+	<string name="sync_auth_reset_hint">Bitte lege ein neues Passwort für deinen Account fest</string>
 	<string name="confirm_password">Passwort bestätigen</string>
 	<string name="password_reset">Passwort erfolgreich zurückgesetzt</string>
 	<string name="sync_login">Melde dich an, um deine Daten zu synchronisieren</string>
