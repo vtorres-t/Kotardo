@@ -909,4 +909,8 @@
     <string name="available_pattern">%1$s available</string>
 	<string name="forgot_password">Forgot password</string>
 	<string name="reset_email_sent">If a valid account exists, an email to reset your password has been sent to your inbox</string>
+    <string name="sync_auth_reset_title">Reset password</string>
+	<string name="sync_auth_reset_hint">Please set a new password for your account</string>
+	<string name="confirm_password">Confirm Password</string>
+	<string name="password_reset">Password reset successfully</string>
 </resources>

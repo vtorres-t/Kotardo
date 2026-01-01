@@ -162,7 +162,6 @@ class SettingsActivity :
 				when (intent.data?.host) {
 					HOST_ABOUT -> AboutSettingsFragment()
 					HOST_SYNC_SETTINGS -> SyncSettingsFragment()
-					HOST_RESET_PASSWORD -> SyncSettingsFragment()
 					else -> null
 				}
 			}
