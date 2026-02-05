@@ -69,7 +69,6 @@ import org.koitharu.kotatsu.favourites.ui.categories.select.FavoriteDialog
 import org.koitharu.kotatsu.filter.ui.FilterCoordinator
 import org.koitharu.kotatsu.filter.ui.sheet.FilterSheetFragment
 import org.koitharu.kotatsu.filter.ui.tags.TagsCatalogSheet
-import org.koitharu.kotatsu.history.ui.HistoryActivity
 import org.koitharu.kotatsu.image.ui.ImageActivity
 import org.koitharu.kotatsu.list.ui.config.ListConfigBottomSheet
 import org.koitharu.kotatsu.list.ui.config.ListConfigSection
@@ -229,8 +228,6 @@ class AppRouter private constructor(
         )
     }
 
-    fun openHistory() = startActivity(HistoryActivity::class.java)
-
     fun openFavorites() = startActivity(FavouritesActivity::class.java)
 
     fun openFavorites(category: FavouriteCategory) {
@@ -285,10 +282,6 @@ class AppRouter private constructor(
 
     fun openSourcesSettings() {
         startActivity(sourcesSettingsIntent(contextOrNull() ?: return))
-    }
-
-    fun openDiscordSettings() {
-        startActivity(discordSettingsIntent(contextOrNull() ?: return))
     }
 
     fun openReaderTapGridSettings() = startActivity(ReaderTapGridConfigActivity::class.java)
@@ -755,17 +748,9 @@ class AppRouter private constructor(
             Intent(context, SettingsActivity::class.java)
                 .setAction(ACTION_PERIODIC_BACKUP)
 
-        fun discordSettingsIntent(context: Context) =
-            Intent(context, SettingsActivity::class.java)
-                .setAction(ACTION_MANAGE_DISCORD)
-
         fun proxySettingsIntent(context: Context) =
             Intent(context, SettingsActivity::class.java)
                 .setAction(ACTION_PROXY)
-
-        fun historySettingsIntent(context: Context) =
-            Intent(context, SettingsActivity::class.java)
-                .setAction(ACTION_HISTORY)
 
         fun sourcesSettingsIntent(context: Context) =
             Intent(context, SettingsActivity::class.java)
@@ -842,7 +827,6 @@ class AppRouter private constructor(
         const val ACTION_READER = "${BuildConfig.APPLICATION_ID}.action.MANAGE_READER_SETTINGS"
         const val ACTION_SOURCE = "${BuildConfig.APPLICATION_ID}.action.MANAGE_SOURCE_SETTINGS"
         const val ACTION_SOURCES = "${BuildConfig.APPLICATION_ID}.action.MANAGE_SOURCES"
-        const val ACTION_MANAGE_DISCORD = "${BuildConfig.APPLICATION_ID}.action.MANAGE_DISCORD"
         const val ACTION_SUGGESTIONS = "${BuildConfig.APPLICATION_ID}.action.MANAGE_SUGGESTIONS"
         const val ACTION_TRACKER = "${BuildConfig.APPLICATION_ID}.action.MANAGE_TRACKER"
         const val ACTION_PERIODIC_BACKUP = "${BuildConfig.APPLICATION_ID}.action.MANAGE_PERIODIC_BACKUP"
