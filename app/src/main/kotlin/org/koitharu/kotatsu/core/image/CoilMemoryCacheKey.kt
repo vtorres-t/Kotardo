@@ -32,8 +32,8 @@ class CoilMemoryCacheKey(
 					val size = parcel.readInt()
 					val map = ArrayMap<String, String>(size)
 					repeat(size) {
-						map.put(parcel.readString(), parcel.readString())
-					}
+                        map[parcel.readString()] = parcel.readString()
+                    }
 					map
 				},
 			),

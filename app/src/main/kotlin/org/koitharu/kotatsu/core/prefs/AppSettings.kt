@@ -794,7 +794,6 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 		const val KEY_IGNORE_DOZE = "ignore_dose"
 		const val KEY_TRACKER_DEBUG = "tracker_debug"
 		const val KEY_LINK_GITHUB = "about_github"
-		const val KEY_LINK_MANUAL = "about_help"
 		const val KEY_PROXY_TEST = "proxy_test"
 		const val KEY_OPEN_BROWSER = "open_browser"
 		const val KEY_HANDLE_LINKS = "handle_links"

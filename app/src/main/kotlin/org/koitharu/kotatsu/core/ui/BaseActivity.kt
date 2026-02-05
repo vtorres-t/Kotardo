@@ -2,7 +2,6 @@ package org.koitharu.kotatsu.core.ui
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
@@ -17,7 +16,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
-import androidx.fragment.app.FragmentManager
 import androidx.viewbinding.ViewBinding
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.Flow
@@ -126,12 +124,6 @@ abstract class BaseActivity<B : ViewBinding> :
 			}
 		}
 		return super.onKeyDown(keyCode, event)
-	}
-
-	protected fun isDarkAmoledTheme(): Boolean {
-		val uiMode = resources.configuration.uiMode
-		val isNight = uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-		return isNight && isAmoledTheme
 	}
 
 	@CallSuper
