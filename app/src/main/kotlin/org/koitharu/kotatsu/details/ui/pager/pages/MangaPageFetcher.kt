@@ -28,7 +28,6 @@ import org.koitharu.kotatsu.local.data.LocalStorageCache
 import org.koitharu.kotatsu.local.data.PageCache
 import org.koitharu.kotatsu.parsers.model.MangaPage
 import org.koitharu.kotatsu.parsers.util.mimeType
-import org.koitharu.kotatsu.parsers.util.requireBody
 import org.koitharu.kotatsu.parsers.util.runCatchingCancellable
 import org.koitharu.kotatsu.reader.domain.PageLoader
 import javax.inject.Inject
@@ -78,7 +77,7 @@ class MangaPageFetcher(
 				throw HttpException(response.toNetworkResponse())
 			}
 			val mimeType = response.mimeType?.toMimeTypeOrNull()
-			val file = response.requireBody().use {
+			val file = response.body.use {
 				pagesCache.set(pageUrl, it.source(), mimeType)
 			}
 			SourceFetchResult(
@@ -94,7 +93,7 @@ class MangaPageFetcher(
 		requestMillis = sentRequestAtMillis,
 		responseMillis = receivedResponseAtMillis,
 		headers = headers.toNetworkHeaders(),
-		body = body?.source()?.let(::NetworkResponseBody),
+		body = body.source().let(::NetworkResponseBody),
 		delegate = this,
 	)
 
