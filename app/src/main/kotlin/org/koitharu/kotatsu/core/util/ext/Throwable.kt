@@ -30,7 +30,6 @@ import org.koitharu.kotatsu.core.exceptions.UnsupportedFileException
 import org.koitharu.kotatsu.core.exceptions.UnsupportedSourceException
 import org.koitharu.kotatsu.core.exceptions.WrapperIOException
 import org.koitharu.kotatsu.core.exceptions.WrongPasswordException
-import org.koitharu.kotatsu.core.exceptions.resolve.ExceptionResolver
 import org.koitharu.kotatsu.parsers.ErrorMessages.FILTER_BOTH_LOCALE_GENRES_NOT_SUPPORTED
 import org.koitharu.kotatsu.parsers.ErrorMessages.FILTER_BOTH_STATES_GENRES_NOT_SUPPORTED
 import org.koitharu.kotatsu.parsers.ErrorMessages.FILTER_MULTIPLE_GENRES_NOT_SUPPORTED
@@ -191,33 +190,6 @@ private fun mapDisplayMessage(msg: String?, resources: Resources): String? = whe
     msg == FILTER_BOTH_LOCALE_GENRES_NOT_SUPPORTED -> resources.getString(R.string.error_filter_locale_genre_not_supported)
     msg == FILTER_BOTH_STATES_GENRES_NOT_SUPPORTED -> resources.getString(R.string.error_filter_states_genre_not_supported)
     else -> null
-}
-
-fun Throwable.isReportable(): Boolean {
-    if (this is Error) {
-        return true
-    }
-    if (this is CaughtException) {
-        return cause.isReportable()
-    }
-    if (this is WrapperIOException) {
-        return cause.isReportable()
-    }
-    if (ExceptionResolver.canResolve(this)) {
-        return false
-    }
-    if (this is ParseException
-        || this.isNetworkError()
-        || this is CloudFlareBlockedException
-        || this is CloudFlareProtectedException
-        || this is BadBackupFormatException
-        || this is WrongPasswordException
-        || this is TooManyRequestExceptions
-        || this is HttpStatusException
-    ) {
-        return false
-    }
-    return true
 }
 
 fun Throwable.isNetworkError(): Boolean {

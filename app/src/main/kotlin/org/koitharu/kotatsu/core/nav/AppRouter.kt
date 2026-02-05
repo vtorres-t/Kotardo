@@ -25,7 +25,6 @@ import dagger.hilt.android.EntryPointAccessors
 import org.koitharu.kotatsu.BuildConfig
 import org.koitharu.kotatsu.R
 import org.koitharu.kotatsu.alternatives.ui.AlternativesActivity
-import org.koitharu.kotatsu.backups.ui.backup.BackupDialogFragment
 import org.koitharu.kotatsu.backups.ui.restore.RestoreDialogFragment
 import org.koitharu.kotatsu.bookmarks.ui.AllBookmarksActivity
 import org.koitharu.kotatsu.browser.BrowserActivity
@@ -454,12 +453,6 @@ class AppRouter private constructor(
         RestoreDialogFragment().withArgs(1) {
             putString(KEY_FILE, fileUri.toString())
         }.show()
-    }
-
-    fun createBackup(destination: Uri) {
-        BackupDialogFragment().withArgs(1) {
-            putParcelable(KEY_DATA, destination)
-        }.showDistinct()
     }
 
     fun showImportDialog() {
