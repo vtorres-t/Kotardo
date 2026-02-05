@@ -10,7 +10,7 @@ plugins {
 	id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
-android {
+android {d
 	compileSdk = 36
 	buildToolsVersion = '35.0.0'
 	namespace = 'org.koitharu.kotatsu'
@@ -24,7 +24,7 @@ android {
 
 	defaultConfig {
         applicationId 'org.koitharu.kotatsu'
-		minSdk = 29
+		minSdk = 27
 		targetSdk = 36
 		versionCode = 1047
 		versionName = '9.6.2'
