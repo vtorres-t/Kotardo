@@ -1,7 +1,6 @@
 package org.koitharu.kotatsu.core.util.ext
 
 import android.os.SystemClock
-import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -158,17 +156,9 @@ fun <T1, T2, T3, T4, T5, T6, T7, R> combine(
 
 suspend fun <T : Any> Flow<T?>.firstNotNull(): T = checkNotNull(first { x -> x != null })
 
-suspend fun <T : Any> Flow<T?>.firstNotNullOrNull(): T? = firstOrNull { x -> x != null }
-
 fun <T> Flow<Flow<T>>.flattenLatest() = flatMapLatest { it }
 
 fun <T> SuspendLazy<T>.asFlow() = flow { emit(runCatchingCancellable { get() }) }
-
-suspend fun <T> SendChannel<T>.sendNotNull(item: T?) {
-	if (item != null) {
-		send(item)
-	}
-}
 
 fun <T> MutableStateFlow<List<T>>.append(item: T) {
 	update { list -> list + item }

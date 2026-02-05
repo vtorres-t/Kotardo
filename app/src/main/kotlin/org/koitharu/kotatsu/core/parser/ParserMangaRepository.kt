@@ -100,10 +100,6 @@ class ParserMangaRepository(
 		parser.onCreateConfig(it)
 	}
 
-	fun getAvailableMirrors(): List<String> {
-		return parser.configKeyDomain.presetValues.toList()
-	}
-
 	fun isSlowdownEnabled(): Boolean {
 		return getConfig().isSlowdownEnabled
 	}
