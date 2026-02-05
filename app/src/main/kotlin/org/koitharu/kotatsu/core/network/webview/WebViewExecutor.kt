@@ -32,7 +32,7 @@ import javax.inject.Provider
 import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlin.ranges.contains
+import androidx.core.net.toUri
 
 @Singleton
 class WebViewExecutor @Inject constructor(
@@ -72,7 +72,7 @@ class WebViewExecutor @Inject constructor(
                     }
                 }
 
-                val baseUri = android.net.Uri.parse(baseUrl)
+                val baseUri = baseUrl.toUri()
                 val originalHost = baseUri.host
 
                 suspendCoroutine { continuation ->
@@ -143,12 +143,15 @@ class WebViewExecutor @Inject constructor(
 
                     handler.postDelayed(contentPoller, 1000)
 
-                    handler.postDelayed({
-                        if (!hasResumed) {
-                            println("ERROR: Overall operation timed out.")
-                            resumeOnce(null)
-                        }
-                    }, timeoutMs)
+                    handler.postDelayed(
+                        {
+                            if (!hasResumed) {
+                                println("ERROR: Overall operation timed out.")
+                                resumeOnce(null)
+                            }
+                        },
+                        timeoutMs,
+                    )
                 }
             } finally {
                 // If already resumed, stopLoading() was called; this is a safety call.
