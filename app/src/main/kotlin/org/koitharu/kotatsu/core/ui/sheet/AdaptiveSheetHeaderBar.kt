@@ -33,9 +33,6 @@ class AdaptiveSheetHeaderBar @JvmOverloads constructor(
 			binding.shTextViewTitle.text = value
 		}
 
-	val isTitleVisible: Boolean
-		get() = binding.shLayoutSidesheet.isVisible
-
 	init {
 		orientation = VERTICAL
 		binding.shButtonClose.setOnClickListener { dismissSheet() }
