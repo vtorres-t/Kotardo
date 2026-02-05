@@ -21,6 +21,7 @@ import org.koitharu.kotatsu.parsers.util.json.mapJSONNotNull
 import org.koitharu.kotatsu.parsers.util.parseJsonArray
 import org.koitharu.kotatsu.parsers.util.runCatchingCancellable
 import org.koitharu.kotatsu.parsers.util.splitTwoParts
+import org.koitharu.kotatsu.parsers.util.suspendlazy.getOrNull
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -148,9 +149,8 @@ class AppUpdateRepository @Inject constructor(
 		}.getOrNull()
 	}
 
-	@Suppress("KotlinConstantConditions")
-    fun isUpdateSupported(): Boolean {
-		return true
+    suspend fun isUpdateSupported(): Boolean {
+		return appValidator.isOriginalApp.getOrNull() == true
 	}
 
 	private inline fun JSONArray.find(predicate: (JSONObject) -> Boolean): JSONObject? {
