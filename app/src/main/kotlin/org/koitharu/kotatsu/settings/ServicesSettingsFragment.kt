@@ -1,6 +1,5 @@
 package org.koitharu.kotatsu.settings
 
-import android.accounts.AccountManager
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
