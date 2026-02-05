@@ -27,14 +27,12 @@ open class StackLayout @JvmOverloads constructor(
 		}
 		val xStep = w / (visibleChildren.size + 1)
 		val yStep = h / (visibleChildren.size + 1)
-		val maxW = w
-		val maxH = h
 		val total = visibleChildren.size
 		for ((index, child) in visibleChildren.withIndex()) {
 			var cx = paddingLeft + xStep * (total - index)
 			var cy = paddingTop + yStep * (index + 1)
-			val rx = child.measuredWidth.coerceAtMost(maxW) / 2
-			val ry = child.measuredHeight.coerceAtMost(maxH) / 2
+			val rx = child.measuredWidth.coerceAtMost(w) / 2
+			val ry = child.measuredHeight.coerceAtMost(h) / 2
 			if (cx < rx) {
 				cx = rx
 			}

@@ -6,7 +6,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.IntDef
 import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.koitharu.kotatsu.R
 import org.koitharu.kotatsu.core.parser.MangaDataRepository
 import org.koitharu.kotatsu.core.prefs.AppSettings
 import org.koitharu.kotatsu.core.prefs.ListMode

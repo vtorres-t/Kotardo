@@ -65,10 +65,6 @@ class BookmarksRepository @Inject constructor(
 		}
 	}
 
-	suspend fun removeBookmark(bookmark: Bookmark) {
-		removeBookmark(bookmark.manga.id, bookmark.chapterId, bookmark.page)
-	}
-
 	suspend fun removeBookmarks(ids: Set<Long>): ReversibleHandle {
 		val entities = ArrayList<BookmarkEntity>(ids.size)
 		db.withTransaction {

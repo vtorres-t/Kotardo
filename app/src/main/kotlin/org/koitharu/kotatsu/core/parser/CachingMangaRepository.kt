@@ -60,10 +60,6 @@ abstract class CachingMangaRepository(
 		details
 	}.await()
 
-	suspend fun peekDetails(manga: Manga): Manga? {
-		return cache.getDetails(source, manga.url)
-	}
-
 	fun invalidateCache() {
 		cache.clear(source)
 	}
