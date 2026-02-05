@@ -88,7 +88,7 @@ class ReaderControlDelegate(
 		return true
 	}
 
-	fun onKeyUp(keyCode: Int, @Suppress("UNUSED_PARAMETER") event: KeyEvent?): Boolean {
+	fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
 		return (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)
 			&& settings.isReaderVolumeButtonsEnabled
 	}
