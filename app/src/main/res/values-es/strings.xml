@@ -208,7 +208,6 @@
     <string name="various_languages">Varios idiomas</string>
     <string name="search_chapters">Buscar capítulo</string>
     <string name="chapters_empty">No hay capítulos en este manga</string>
-    <string name="percent_string_pattern">%1$s%%</string>
     <string name="appearance">Aspecto</string>
     <string name="suggestions_updating">Actualización de las sugerencias</string>
     <string name="suggestions_excluded_genres">Excluir géneros</string>
@@ -294,7 +293,6 @@
     <string name="folder_with_images">Carpeta con imágenes</string>
     <string name="categories_delete_confirm">¿Estás seguro de que quieres eliminar las categorías favoritas seleccionadas? \nTodos los mangas en ella se perderán y esto no se puede deshacer.</string>
     <string name="explore">Explorar</string>
-    <string name="memory_usage_pattern">%1$s - %2$s</string>
     <string name="exit_confirmation_summary">Pulse dos veces «Atrás» para salir de la aplicación</string>
     <string name="exit_confirmation">Confirmación de salida</string>
     <string name="pages_cache">Caché de páginas</string>
@@ -475,7 +473,6 @@
     <string name="lock_screen_rotation">Rotación de la pantalla de bloqueo</string>
     <string name="sources_catalog">Catálogo de las fuentes</string>
     <string name="content_type_manga">Manga</string>
-    <string name="source_summary_pattern">%1$s, %2$s</string>
     <string name="content_type_hentai">Hentai</string>
     <string name="content_type_comics">Cómic</string>
     <string name="no_manga_sources_found">No se han encontrado fuentes de manga disponibles en su búsqueda</string>
@@ -523,7 +520,6 @@
 \n
 \nAdvertencia: el progreso de lectura actual se perderá.</string>
     <string name="category_hidden_done">Esta categoría estaba oculta en la pantalla principal y es accesible a través de Menú → Gestionar categorías</string>
-    <string name="remaining_time_pattern">%1$s %2$s</string>
     <string name="volume_unknown">Volumen desconocido</string>
     <string name="volume_">Volumen %d</string>
     <string name="incognito_mode_hint">Tu progreso en la lectura no se guardará</string>
@@ -616,7 +612,6 @@
     <string name="less_frequently">Poco frecuente</string>
     <string name="more_frequently">Más frecuentemente</string>
     <string name="frequency_of_check">Frecuencia del control</string>
-    <string name="new_chapters_pattern">%1$s: %2$d</string>
     <string name="pin_navigation_ui_summary">No ocultar la barra de navegación y la vista de búsqueda al desplazarse</string>
     <string name="pin_navigation_ui">Pin de la interfaz de usuario</string>
     <string name="blocked_by_server_message">Estás bloqueado por el servidor. Intente utilizar una conexión de red diferente (VPN, Proxy, etc.)</string>
