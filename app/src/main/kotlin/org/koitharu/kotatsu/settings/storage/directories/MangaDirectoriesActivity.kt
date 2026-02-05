@@ -71,7 +71,9 @@ class MangaDirectoriesActivity : BaseActivity<ActivityMangaDirectoriesBinding>()
         viewModel.items.observe(this) {
             adapter.items = it
         }
-		viewModel.isLoading.observe(this) { viewBinding.progressBar.isVisible = it }
+		viewModel.isLoading.observe(this) {
+            viewBinding.progressBar.isVisible = it
+        }
 		viewModel.onError.observeEvent(
 			this,
 			SnackbarErrorObserver(viewBinding.root, null, exceptionResolver) {
