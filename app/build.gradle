@@ -10,7 +10,7 @@ plugins {
 	id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
-android {d
+android {
 	compileSdk = 36
 	buildToolsVersion = '35.0.0'
 	namespace = 'org.koitharu.kotatsu'
