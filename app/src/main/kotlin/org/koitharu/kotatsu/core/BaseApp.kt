@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import okhttp3.internal.platform.PlatformRegistry
 import org.conscrypt.Conscrypt
 import org.koitharu.kotatsu.core.db.MangaDatabase
-import org.koitharu.kotatsu.core.os.AppValidator
 import org.koitharu.kotatsu.core.prefs.AppSettings
 import org.koitharu.kotatsu.core.util.ext.processLifecycleScope
 import org.koitharu.kotatsu.local.data.LocalStorageChanges
@@ -43,9 +42,6 @@ open class BaseApp : Application(), Configuration.Provider {
 
 	@Inject
 	lateinit var workerFactory: HiltWorkerFactory
-
-	@Inject
-	lateinit var appValidator: AppValidator
 
 	@Inject
 	lateinit var workScheduleManager: WorkScheduleManager

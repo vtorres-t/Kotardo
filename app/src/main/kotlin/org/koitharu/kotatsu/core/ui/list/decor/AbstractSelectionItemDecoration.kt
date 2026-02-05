@@ -9,6 +9,7 @@ import androidx.collection.MutableLongSet
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_ID
+import androidx.core.graphics.withSave
 
 abstract class AbstractSelectionItemDecoration : RecyclerView.ItemDecoration() {
 
@@ -67,32 +68,32 @@ abstract class AbstractSelectionItemDecoration : RecyclerView.ItemDecoration() {
 	}
 
 	private fun doDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State, isOver: Boolean) {
-		val checkpoint = canvas.save()
-		if (parent.clipToPadding) {
-			canvas.clipRect(
-				parent.paddingLeft, parent.paddingTop, parent.width - parent.paddingRight,
-				parent.height - parent.paddingBottom,
-			)
-		}
+        canvas.withSave {
+            if (parent.clipToPadding) {
+                canvas.clipRect(
+                    parent.paddingLeft, parent.paddingTop, parent.width - parent.paddingRight,
+                    parent.height - parent.paddingBottom,
+                )
+            }
 
-		for (child in parent.children) {
-			val itemId = getItemId(parent, child)
-			if (itemId != NO_ID && itemId in selection) {
-				if (isIncludeDecorAndMargins) {
-					parent.getDecoratedBoundsWithMargins(child, bounds)
-				} else {
-					bounds.set(child.left, child.top, child.right, child.bottom)
-				}
-				boundsF.set(bounds)
-				boundsF.offset(child.translationX, child.translationY)
-				if (isOver) {
-					onDrawForeground(canvas, parent, child, boundsF, state)
-				} else {
-					onDrawBackground(canvas, parent, child, boundsF, state)
-				}
-			}
-		}
-		canvas.restoreToCount(checkpoint)
+            for (child in parent.children) {
+                val itemId = getItemId(parent, child)
+                if (itemId != NO_ID && itemId in selection) {
+                    if (isIncludeDecorAndMargins) {
+                        parent.getDecoratedBoundsWithMargins(child, bounds)
+                    } else {
+                        bounds.set(child.left, child.top, child.right, child.bottom)
+                    }
+                    boundsF.set(bounds)
+                    boundsF.offset(child.translationX, child.translationY)
+                    if (isOver) {
+                        onDrawForeground(canvas, parent, child, boundsF, state)
+                    } else {
+                        onDrawBackground(canvas, parent, child, boundsF, state)
+                    }
+                }
+            }
+        }
 	}
 
 	abstract fun getItemId(parent: RecyclerView, child: View): Long

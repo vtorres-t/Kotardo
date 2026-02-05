@@ -51,6 +51,7 @@ class LocalInfoDialog : AlertDialogFragment<DialogLocalInfoBinding>(), View.OnCl
                     binding.barView.animateSegments(emptyList())
                 }
             }
+
 		viewModel.onCleanedUp.observeEvent(viewLifecycleOwner, ::onCleanedUp)
         viewModel.onAllCleanedUp.observeEvent(viewLifecycleOwner, ::onAllCleanedUp)
 		viewModel.isCleaningUp.observe(viewLifecycleOwner) { loading ->
