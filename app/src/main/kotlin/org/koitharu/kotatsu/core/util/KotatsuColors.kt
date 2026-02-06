@@ -48,7 +48,7 @@ object KotatsuColors {
 	}
 
 	private fun getHue(hex: String): Float {
-		val r = (hex.substring(0, 2).toInt(16)).toFloat()
+		val r = (hex.take(2).toInt(16)).toFloat()
 		val g = (hex.substring(2, 4).toInt(16)).toFloat()
 		val b = (hex.substring(4, 6).toInt(16)).toFloat()
 
