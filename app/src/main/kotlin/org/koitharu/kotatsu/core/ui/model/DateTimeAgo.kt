@@ -21,30 +21,6 @@ sealed class DateTimeAgo {
 		override fun equals(other: Any?): Boolean = other === JustNow
 	}
 
-	data class MinutesAgo(val minutes: Int) : DateTimeAgo() {
-		override fun format(context: Context): String {
-			return context.resources.getQuantityStringSafe(
-				R.plurals.minutes_ago,
-				minutes,
-				minutes,
-			)
-		}
-
-		override fun toString() = "minutes_ago_$minutes"
-	}
-
-	data class HoursAgo(val hours: Int) : DateTimeAgo() {
-		override fun format(context: Context): String {
-			return context.resources.getQuantityStringSafe(
-				R.plurals.hours_ago,
-				hours,
-				hours,
-			)
-		}
-
-		override fun toString() = "hours_ago_$hours"
-	}
-
 	object Today : DateTimeAgo() {
 		override fun format(context: Context): String {
 			return context.getString(R.string.today)

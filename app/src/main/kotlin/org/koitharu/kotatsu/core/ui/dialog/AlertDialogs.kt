@@ -55,15 +55,6 @@ fun <B : AlertDialog.Builder, T> B.setRecyclerViewList(
     setRecyclerViewList(ListDelegationAdapter(delegatesManager).also { it.items = list })
 }
 
-fun <B : AlertDialog.Builder, T> B.setRecyclerViewList(
-    list: List<T>,
-    vararg delegates: AdapterDelegate<List<T>>,
-) = apply {
-    val delegatesManager = AdapterDelegatesManager<List<T>>()
-    delegates.forEach { delegatesManager.addDelegate(it) }
-    setRecyclerViewList(ListDelegationAdapter(delegatesManager).also { it.items = list })
-}
-
 fun <B : AlertDialog.Builder> B.setRecyclerViewList(adapter: RecyclerView.Adapter<*>) = apply {
     val recyclerView = RecyclerView(context)
     recyclerView.layoutManager = LinearLayoutManager(context)
