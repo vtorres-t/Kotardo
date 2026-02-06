@@ -415,8 +415,10 @@ class ReaderViewModel @Inject constructor(
                         val manga = details.toManga()
                         // obtain state
                         if (readingState.value == null) {
-                            val newState =
-                                getStateFromIntent(manga) ?: return@collect // manga not loaded yet if cannot get state
+                            val newState = getStateFromIntent(manga)
+                            if (newState == null) {
+                                return@collect // manga not loaded yet if cannot get state
+                            }
                             readingState.value = newState
                             val mode = runCatchingCancellable {
                                 detectReaderModeUseCase(manga, newState)

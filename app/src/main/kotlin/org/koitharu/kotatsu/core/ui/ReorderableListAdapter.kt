@@ -47,6 +47,14 @@ open class ReorderableListAdapter<T : ListModel> : ListDelegationAdapter<List<T>
 		return this
 	}
 
+	fun addListListener(listListener: ListListener<T>) {
+		listListeners.add(listListener)
+	}
+
+	fun removeListListener(listListener: ListListener<T>) {
+		listListeners.remove(listListener)
+	}
+
 	protected class DiffCallback<T : ListModel>(
 		private val oldList: List<T>,
 		private val newList: List<T>,

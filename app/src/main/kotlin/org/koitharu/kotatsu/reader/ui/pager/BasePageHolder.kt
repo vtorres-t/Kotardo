@@ -173,7 +173,7 @@ abstract class BasePageHolder<B : ViewBinding>(
 			bindingInfo.progressBar.isIndeterminate = true
 			bindingInfo.textViewStatus.setText(R.string.loading_)
 		}
-		val isAnimated = isAnimatedImage() == true
+		val isAnimated = boundData?.url?.isAnimatedImage() == true
 		when (state) {
 			is PageState.Converting -> {
 				bindingInfo.textViewStatus.setText(R.string.processing_)

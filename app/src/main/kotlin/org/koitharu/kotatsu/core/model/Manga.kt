@@ -13,6 +13,7 @@ import androidx.core.text.strikeThrough
 import org.koitharu.kotatsu.R
 import org.koitharu.kotatsu.core.ui.model.MangaOverride
 import org.koitharu.kotatsu.core.util.ext.iterator
+import org.koitharu.kotatsu.details.ui.model.ChapterListItem
 import org.koitharu.kotatsu.parsers.model.ContentRating
 import org.koitharu.kotatsu.parsers.model.Demographic
 import org.koitharu.kotatsu.parsers.model.Manga
@@ -31,6 +32,20 @@ fun Collection<Manga>.distinctById() = distinctBy { it.id }
 
 @JvmName("chaptersIds")
 fun Collection<MangaChapter>.ids() = mapToSet { it.id }
+
+fun Collection<ChapterListItem>.countChaptersByBranch(): Int {
+	if (size <= 1) {
+		return size
+	}
+	val acc = MutableObjectIntMap<String?>()
+	for (item in this) {
+		val branch = item.chapter.branch
+		acc[branch] = acc.getOrDefault(branch, 0) + 1
+	}
+	var max = 0
+	acc.forEachValue { x -> if (x > max) max = x }
+	return max
+}
 
 @get:StringRes
 val MangaState.titleResId: Int

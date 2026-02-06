@@ -88,6 +88,14 @@ class MangaPrefetchService : CoroutineIntentService() {
 		private const val ACTION_PREFETCH_PAGES = "pages"
 		private const val ACTION_PREFETCH_LAST = "last"
 
+		fun prefetchDetails(context: Context, manga: Manga) {
+			if (!isPrefetchAvailable(context, manga.source)) return
+			val intent = Intent(context, MangaPrefetchService::class.java)
+			intent.action = ACTION_PREFETCH_DETAILS
+			intent.putExtra(EXTRA_MANGA, ParcelableManga(manga))
+			tryStart(context, intent)
+		}
+
 		fun prefetchPages(context: Context, chapter: MangaChapter) {
 			if (!isPrefetchAvailable(context, chapter.source)) return
 			val intent = Intent(context, MangaPrefetchService::class.java)

@@ -10,6 +10,8 @@ import android.view.ViewGroup.LayoutParams
 import androidx.activity.ComponentDialog
 import androidx.activity.OnBackPressedDispatcher
 import androidx.annotation.CallSuper
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.view.ActionMode
 import androidx.core.view.OnApplyWindowInsetsListener
@@ -128,6 +130,12 @@ abstract class BaseAdaptiveSheet<B : ViewBinding> : AppCompatDialogFragment(),
 	protected abstract fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup?): B
 
 	protected open fun onViewBindingCreated(binding: B, savedInstanceState: Bundle?) = Unit
+
+	fun startSupportActionMode(callback: ActionMode.Callback): ActionMode? {
+		val delegate =
+			(dialog as? AppCompatDialog)?.delegate ?: (activity as? AppCompatActivity)?.delegate ?: return null
+		return delegate.startSupportActionMode(callback)
+	}
 
 	protected fun setExpanded(isExpanded: Boolean, isLocked: Boolean) {
 		this.isLocked = isLocked

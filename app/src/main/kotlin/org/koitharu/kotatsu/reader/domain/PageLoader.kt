@@ -12,6 +12,7 @@ import androidx.core.net.toUri
 import coil3.BitmapImage
 import coil3.Image
 import coil3.ImageLoader
+import coil3.memory.MemoryCache
 import coil3.request.ImageRequest
 import coil3.request.transformations
 import coil3.toBitmap
@@ -141,6 +142,28 @@ class PageLoader @Inject constructor(
 			.transformations(TrimTransformation())
 			.build()
 		return coil.execute(request).image?.toImageSource()
+	}
+
+	fun peekPreviewSource(preview: String?): ImageSource? {
+		if (preview.isNullOrEmpty()) {
+			return null
+		}
+		coil.memoryCache?.let { cache ->
+			val key = MemoryCache.Key(preview)
+			cache[key]?.image?.let {
+				return if (it is BitmapImage) {
+					ImageSource.cachedBitmap(it.toBitmap())
+				} else {
+					ImageSource.bitmap(it.toBitmap())
+				}
+			}
+		}
+		coil.diskCache?.let { cache ->
+			cache.openSnapshot(preview)?.use { snapshot ->
+				return ImageSource.file(snapshot.data.toFile())
+			}
+		}
+		return null
 	}
 
 	fun loadPageAsync(page: MangaPage, force: Boolean): ProgressDeferred<Uri, Float> {

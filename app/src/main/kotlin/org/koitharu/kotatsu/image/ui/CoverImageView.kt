@@ -106,7 +106,7 @@ class CoverImageView @JvmOverloads constructor(
 		}
 	}
 
-	private fun isAnimatedUrl(url: String?): Boolean = isAnimatedImage() == true
+	private fun isAnimatedUrl(url: String?): Boolean = url?.isAnimatedImage() == true
 
 	override fun setImageAsync(page: ReaderPage) = enqueueRequest(
 		newRequestBuilder(applyTrim = true)

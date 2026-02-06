@@ -141,6 +141,46 @@ class MangaLoaderContextImpl @Inject constructor(
         }
     }
 
+    private fun evaluateFilterPredicate(script: String, requestUrl: String): Boolean {
+        // Extract the last `return ...;` expression from the script
+        val returnIdx = script.lastIndexOf("return")
+        if (returnIdx == -1) {
+            // No explicit return -> default to capturing
+            return true
+        }
+        val afterReturn = script.substring(returnIdx + "return".length)
+        val expr = afterReturn.substringBefore(";").trim().ifEmpty { return true }
+
+        // Support expressions like:
+        //   url.includes('a') && url.includes('b') || url.includes('c')
+        // Split by OR
+        val orClauses = expr.split("||").map { it.trim() }
+        for (clause in orClauses) {
+            // Remove wrapping parentheses
+            val normalized = clause.trim().trim('(', ')').trim()
+            // Split by AND
+            val andTerms = normalized.split("&&").map { it.trim() }.filter { it.isNotEmpty() }
+            var allMatch = true
+            for (term in andTerms) {
+                // Only support url.includes('<text>') terms for now
+                val m = Regex("""url\.includes\(\s*(['"])(.*?)\1\s*\)""").find(term)
+                if (m != null) {
+                    val needle = m.groupValues[2]
+                    if (!requestUrl.contains(needle)) {
+                        allMatch = false
+                        break
+                    }
+                } else {
+                    // Unknown term -> fail this clause
+                    allMatch = false
+                    break
+                }
+            }
+            if (allMatch) return true
+        }
+        return false
+    }
+
     override suspend fun captureWebViewUrls(
         pageUrl: String,
         urlPattern: Regex,

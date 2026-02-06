@@ -5,6 +5,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import androidx.annotation.WorkerThread
+import kotlinx.coroutines.sync.Mutex
 import org.koitharu.kotatsu.browser.BrowserCallback
 import org.koitharu.kotatsu.browser.BrowserClient
 import java.util.Collections
@@ -21,6 +22,7 @@ class RequestInterceptorWebViewClient(
 ) : BrowserClient(callback) {
 
     private val capturedRequests = Collections.synchronizedList(mutableListOf<InterceptedRequest>())
+    private val mutex = Mutex()
     private val isCapturing = AtomicBoolean(true)
     private val startTime = System.currentTimeMillis()
     private val scriptInjected = AtomicBoolean(false)
@@ -51,12 +53,12 @@ class RequestInterceptorWebViewClient(
         return super.shouldOverrideUrlLoading(view, request)
     }
 
-    override fun onPageFinished(webView: WebView, url: String) {
-        super.onPageFinished(webView, url)
+    override fun onPageFinished(view: WebView, url: String) {
+        super.onPageFinished(view, url)
         val script = config.pageScript
         if (!script.isNullOrBlank() && scriptInjected.compareAndSet(false, true)) {
             Log.d(TAG_VRF, "Injecting pageScript for URL: $url")
-            webView.evaluateJavascript(script, null)
+            view.evaluateJavascript(script, null)
         } else if (!script.isNullOrBlank()) {
             Log.v(TAG_VRF, "PageScript already injected, skipping for URL: $url")
         }

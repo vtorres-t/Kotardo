@@ -1,6 +1,7 @@
 package org.koitharu.kotatsu.core.ui.widgets
 
 import android.content.Context
+import android.os.Build
 import android.text.Selection
 import android.text.Spannable
 import android.util.AttributeSet
@@ -17,8 +18,10 @@ class SelectableTextView @JvmOverloads constructor(
 ) : MaterialTextView(context, attrs, defStyleAttr) {
 
 	init {
-        pointerIcon = PointerIcon.getSystemIcon(context, PointerIconCompat.TYPE_TEXT)
-    }
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			pointerIcon = PointerIcon.getSystemIcon(context, PointerIconCompat.TYPE_TEXT)
+		}
+	}
 
 	override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
 		fixSelectionRange()
@@ -37,4 +40,8 @@ class SelectableTextView @JvmOverloads constructor(
 		super.scrollTo(0, 0)
 	}
 
+	fun selectAll() {
+		val spannableText = text as? Spannable ?: return
+		Selection.selectAll(spannableText)
+	}
 }
