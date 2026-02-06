@@ -2,6 +2,7 @@ package org.koitharu.kotatsu.core.util.ext
 
 import android.util.DisplayMetrics
 import androidx.core.view.doOnNextLayout
+import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,11 @@ var RecyclerView.firstVisibleItemPosition: Int
 		}
 	}
 
+val RecyclerView.visibleItemCount: Int
+	get() = (layoutManager as? LinearLayoutManager)?.run {
+		findLastVisibleItemPosition() - findFirstVisibleItemPosition()
+	} ?: 0
+
 fun <T> RecyclerView.ViewHolder.getItem(clazz: Class<T>): T? {
 	val rawItem = when (this) {
 		is AdapterDelegateViewBindingViewHolder<*, *> -> item
@@ -39,6 +45,22 @@ fun <T> RecyclerView.ViewHolder.getItem(clazz: Class<T>): T? {
 		null
 	}
 }
+
+val RecyclerView.isScrolledToTop: Boolean
+	get() {
+		if (isEmpty()) {
+			return true
+		}
+		val holder = findViewHolderForAdapterPosition(0)
+		return holder != null && holder.itemView.top >= 0
+	}
+
+val RecyclerView.LayoutManager?.firstVisibleItemPosition
+	get() = when (this) {
+		is LinearLayoutManager -> findFirstVisibleItemPosition()
+		is StaggeredGridLayoutManager -> findFirstVisibleItemPositions(null)[0]
+		else -> 0
+	}
 
 val RecyclerView.LayoutManager?.isLayoutReversed
 	get() = when (this) {
