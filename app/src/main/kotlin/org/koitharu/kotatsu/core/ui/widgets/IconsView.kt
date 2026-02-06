@@ -1,7 +1,6 @@
 package org.koitharu.kotatsu.core.ui.widgets
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -37,31 +36,10 @@ class IconsView @JvmOverloads constructor(
 		}
 	}
 
-	fun setIcons(icons: Iterable<Drawable>) {
-		var index = 0
-		for (icon in icons) {
-			val imageView = (getChildAt(index) as ImageView?) ?: addImageView()
-			imageView.setImageDrawable(icon)
-			imageView.isVisible = true
-			index++
-		}
-		for (i in index until childCount) {
-			val imageView = getChildAt(i) as? ImageView ?: continue
-			imageView.setImageDrawable(null)
-			imageView.isVisible = false
-		}
-	}
-
 	fun clearIcons() {
 		repeat(childCount) { i ->
 			getChildAt(i).isVisible = false
 		}
-	}
-
-	fun addIcon(drawable: Drawable) {
-		val imageView = getNextImageView()
-		imageView.setImageDrawable(drawable)
-		imageView.isVisible = true
 	}
 
 	fun addIcon(@DrawableRes resId: Int) {
