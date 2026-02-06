@@ -47,6 +47,12 @@ class PausingHandle : AbstractCoroutineContextElement(PausingHandle) {
 		skip()
 	}
 
+	suspend fun yield() {
+		if (paused.value) {
+			paused.first { !it }
+		}
+	}
+
 	fun skipAllErrors(): Boolean = skipAllErrors
 
 	fun skipCurrentError(): Boolean = skipError.compareAndSet(expect = true, update = false)

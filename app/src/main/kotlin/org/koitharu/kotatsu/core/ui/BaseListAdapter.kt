@@ -34,6 +34,10 @@ open class BaseListAdapter<T : ListModel> : AsyncListDifferDelegationAdapter<T>(
 		return this
 	}
 
+	fun removeListListener(listListener: ListListener<T>) {
+		differ.removeListListener(listListener)
+	}
+
 	fun findHeader(position: Int): ListHeader? {
 		val snapshot = items
 		for (i in (0..position).reversed()) {

@@ -4,11 +4,18 @@ import androidx.collection.ArrayMap
 import androidx.collection.ArraySet
 import androidx.collection.LongSet
 import org.koitharu.kotatsu.BuildConfig
+import java.util.EnumSet
 
 fun <T> Collection<T>.asArrayList(): ArrayList<T> = if (this is ArrayList<*>) {
 	this as ArrayList<T>
 } else {
 	ArrayList(this)
+}
+
+fun <E : Enum<E>> Set<E>.asEnumSet(cls: Class<E>): EnumSet<E> = if (this is EnumSet<*>) {
+	this as EnumSet<E>
+} else {
+	EnumSet.noneOf(cls).apply { addAll(this@asEnumSet) }
 }
 
 fun <K, V> Map<K, V>.findKeyByValue(value: V): K? {
@@ -36,6 +43,12 @@ fun <T> List<T>.takeMostFrequent(limit: Int): List<T> {
 			add(entries[i].key)
 		}
 	}
+}
+
+inline fun <reified E : Enum<E>> Collection<E>.toEnumSet(): EnumSet<E> = if (isEmpty()) {
+	EnumSet.noneOf(E::class.java)
+} else {
+	EnumSet.copyOf(this)
 }
 
 fun <E : Enum<E>> Collection<E>.sortedByOrdinal() = sortedBy { it.ordinal }

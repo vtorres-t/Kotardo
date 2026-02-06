@@ -1,5 +1,7 @@
 package org.koitharu.kotatsu.main.ui
 
+import android.content.Context
+import android.util.AttributeSet
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
@@ -10,6 +12,7 @@ import org.koitharu.kotatsu.core.ui.widgets.SlidingBottomNavigationView
 class MainActionButtonBehavior : ShrinkOnScrollBehavior {
 
 	constructor() : super()
+	constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 
 	override fun layoutDependsOn(
 		parent: CoordinatorLayout,

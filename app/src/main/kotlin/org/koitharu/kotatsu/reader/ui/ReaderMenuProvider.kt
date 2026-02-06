@@ -7,6 +7,7 @@ import androidx.core.view.MenuProvider
 import org.koitharu.kotatsu.R
 
 class ReaderMenuProvider(
+	private val viewModel: ReaderViewModel,
 ) : MenuProvider {
 
 	override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {

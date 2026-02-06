@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import androidx.annotation.FloatRange
 import androidx.appcompat.app.AppCompatDelegate
@@ -628,8 +629,12 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 	}
 
 	private fun isBackgroundNetworkRestricted(): Boolean {
-        return connectivityManager.restrictBackgroundStatus == ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED
-    }
+		return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			connectivityManager.restrictBackgroundStatus == ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED
+		} else {
+			false
+		}
+	}
 
 	companion object {
 
