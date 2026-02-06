@@ -22,7 +22,6 @@ class RequestInterceptorWebViewClient(
 ) : BrowserClient(callback) {
 
     private val capturedRequests = Collections.synchronizedList(mutableListOf<InterceptedRequest>())
-    private val mutex = Mutex()
     private val isCapturing = AtomicBoolean(true)
     private val startTime = System.currentTimeMillis()
     private val scriptInjected = AtomicBoolean(false)
