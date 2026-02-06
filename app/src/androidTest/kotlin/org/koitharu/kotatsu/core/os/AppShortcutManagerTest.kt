@@ -2,7 +2,6 @@ package org.koitharu.kotatsu.core.os
 
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
-import android.os.Build
 import androidx.core.content.getSystemService
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -45,9 +44,6 @@ class AppShortcutManagerTest {
 
 	@Test
 	fun testUpdateShortcuts() = runTest {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-			return@runTest
-		}
 		database.invalidationTracker.addObserver(appShortcutManager)
 		awaitUpdate()
 		assertTrue(getShortcuts().isEmpty())
