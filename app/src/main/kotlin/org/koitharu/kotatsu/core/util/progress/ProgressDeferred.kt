@@ -9,8 +9,5 @@ class ProgressDeferred<T, P>(
 	private val progress: StateFlow<P>,
 ) : Deferred<T> by deferred {
 
-	val progressValue: P
-		get() = progress.value
-
 	fun progressAsFlow(): Flow<P> = progress
 }
