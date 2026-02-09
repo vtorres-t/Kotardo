@@ -3,7 +3,6 @@ package org.koitharu.kotatsu.core.image
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
-import android.os.Build
 import coil3.Extras
 import coil3.ImageLoader
 import coil3.asImage
@@ -136,7 +135,7 @@ class RegionBitmapDecoder(
 
 		inMutable = false
 
-		if (Build.VERSION.SDK_INT >= 26 && options.colorSpace != null) {
+		if (options.colorSpace != null) {
 			inPreferredColorSpace = options.colorSpace
 		}
 		inPremultiplied = options.premultipliedAlpha
@@ -147,7 +146,7 @@ class RegionBitmapDecoder(
 		}
 
 		// High color depth images must be decoded as either RGBA_F16 or HARDWARE.
-		if (Build.VERSION.SDK_INT >= 26 && outConfig == Bitmap.Config.RGBA_F16 && config != Bitmap.Config.HARDWARE) {
+		if (outConfig == Bitmap.Config.RGBA_F16 && config != Bitmap.Config.HARDWARE) {
 			config = Bitmap.Config.RGBA_F16
 		}
 

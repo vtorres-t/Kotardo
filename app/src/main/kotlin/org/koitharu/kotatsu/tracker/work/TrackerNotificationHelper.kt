@@ -35,18 +35,14 @@ class TrackerNotificationHelper @Inject constructor(
 ) {
 
 	fun getAreNotificationsEnabled(): Boolean {
-		val manager = NotificationManagerCompat.from(applicationContext)
-		if (!manager.areNotificationsEnabled()) {
-			return false
-		}
-		return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			val channel = manager.getNotificationChannel(CHANNEL_ID)
-			channel != null && channel.importance != NotificationManager.IMPORTANCE_NONE
-		} else {
-			// fallback
-			settings.isTrackerNotificationsEnabled
-		}
-	}
+        val manager = NotificationManagerCompat.from(applicationContext)
+        if (!manager.areNotificationsEnabled()) {
+            return false
+        }
+
+        val channel = manager.getNotificationChannel(CHANNEL_ID)
+        return channel != null && channel.importance != NotificationManager.IMPORTANCE_NONE
+    }
 
 	suspend fun createNotification(manga: Manga, newChapters: List<MangaChapter>): NotificationInfo? {
 		if (newChapters.isEmpty() || !applicationContext.checkNotificationPermission(CHANNEL_ID)) {
@@ -169,18 +165,6 @@ class TrackerNotificationHelper @Inject constructor(
 		builder.setAutoCancel(true)
 		builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
 		builder.priority = NotificationCompat.PRIORITY_DEFAULT
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-			builder.setSound(settings.notificationSound)
-			var defaults = if (settings.notificationLight) {
-				builder.setLights(ContextCompat.getColor(applicationContext, R.color.blue_primary), 1000, 5000)
-				NotificationCompat.DEFAULT_LIGHTS
-			} else 0
-			if (settings.notificationVibrate) {
-				builder.setVibrate(longArrayOf(500, 500, 500, 500))
-				defaults = defaults or NotificationCompat.DEFAULT_VIBRATE
-			}
-			builder.setDefaults(defaults)
-		}
 	}
 
 	class NotificationInfo(

@@ -1,6 +1,5 @@
 package org.koitharu.kotatsu.core.util
 
-import android.os.Build
 import android.webkit.MimeTypeMap
 import org.jetbrains.annotations.Blocking
 import org.koitharu.kotatsu.core.util.ext.MimeType
@@ -29,13 +28,11 @@ object MimeTypes {
 
 	@Blocking
 	fun probeMimeType(file: File): MimeType? {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			runCatchingCancellable {
-				Files.probeContentType(file.toPath())?.toMimeTypeOrNull()
-			}.getOrNull()?.let { return it }
-		}
-		return getMimeTypeFromExtension(file.name)
-	}
+        runCatchingCancellable {
+            Files.probeContentType(file.toPath())?.toMimeTypeOrNull()
+        }.getOrNull()?.let { return it }
+        return getMimeTypeFromExtension(file.name)
+    }
 
 	fun getNormalizedExtension(name: String): String? = name
 		.lowercase()
