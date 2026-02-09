@@ -828,4 +828,6 @@
     <string name="disable_broken_sources">Desactivar fuentes rotas</string>
     <string name="delete_all_chapters">Borrar todos los capítulos</string>
     <string name="branch_s">Rama: %s</string>
+    <string name="downloads_s">Descargas: %s</string>
+    <string name="created_at_s">Fecha creación: %s</string>
 </resources>

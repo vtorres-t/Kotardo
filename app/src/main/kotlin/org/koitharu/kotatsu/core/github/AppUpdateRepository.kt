@@ -95,6 +95,8 @@ class AppUpdateRepository @Inject constructor(
 				id = json.getLong("id"),
 				url = json.getString("html_url"),
                 branch = (asset.getString("name").splitTwoParts('_')?.second?: "").splitTwoParts('_')?.first ?: "",
+                downloads = asset.getLong("download_count"),
+                createdAt = asset.getString("created_at"),
                 name = json.getString("name").splitTwoParts('v')?.second ?: "",
 				apkSize = asset.getLong("size"),
 				apkUrl = apkUrl,
