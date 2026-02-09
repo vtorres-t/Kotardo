@@ -199,51 +199,49 @@ class TrackWorker @AssistedInject constructor(
 		applicationContext,
 		WORKER_CHANNEL_ID,
 	).apply {
-		setContentTitle(applicationContext.getString(R.string.check_for_new_chapters))
-		setPriority(NotificationCompat.PRIORITY_MIN)
-		setCategory(NotificationCompat.CATEGORY_SERVICE)
-		setDefaults(0)
-		setOngoing(false)
-		setOnlyAlertOnce(true)
-		setSilent(true)
-		setContentIntent(
-			PendingIntentCompat.getActivity(
-				applicationContext,
-				0,
-				AppRouter.trackerSettingsIntent(applicationContext),
-				0,
-				false,
-			),
-		)
-		addAction(
-			appcompatR.drawable.abc_ic_clear_material,
-			applicationContext.getString(android.R.string.cancel),
-			workManager.createCancelPendingIntent(id),
-		)
-		setProgress(max, progress, max == 0)
-		setSmallIcon(android.R.drawable.stat_notify_sync)
-		setForegroundServiceBehavior(
-			if (TAG_ONESHOT in tags) {
-				NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
-			} else {
-				NotificationCompat.FOREGROUND_SERVICE_DEFERRED
-			},
-		)
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			val actionIntent = PendingIntentCompat.getActivity(
-				applicationContext, SETTINGS_ACTION_CODE,
-				Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
-					.putExtra(Settings.EXTRA_APP_PACKAGE, applicationContext.packageName)
-					.putExtra(Settings.EXTRA_CHANNEL_ID, WORKER_CHANNEL_ID),
-				0, false,
-			)
-			addAction(
-				R.drawable.ic_settings,
-				applicationContext.getString(R.string.notifications_settings),
-				actionIntent,
-			)
-		}
-	}.build()
+        setContentTitle(applicationContext.getString(R.string.check_for_new_chapters))
+        setPriority(NotificationCompat.PRIORITY_MIN)
+        setCategory(NotificationCompat.CATEGORY_SERVICE)
+        setDefaults(0)
+        setOngoing(false)
+        setOnlyAlertOnce(true)
+        setSilent(true)
+        setContentIntent(
+            PendingIntentCompat.getActivity(
+                applicationContext,
+                0,
+                AppRouter.trackerSettingsIntent(applicationContext),
+                0,
+                false,
+            ),
+        )
+        addAction(
+            appcompatR.drawable.abc_ic_clear_material,
+            applicationContext.getString(android.R.string.cancel),
+            workManager.createCancelPendingIntent(id),
+        )
+        setProgress(max, progress, max == 0)
+        setSmallIcon(android.R.drawable.stat_notify_sync)
+        setForegroundServiceBehavior(
+            if (TAG_ONESHOT in tags) {
+                NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE
+            } else {
+                NotificationCompat.FOREGROUND_SERVICE_DEFERRED
+            },
+        )
+        val actionIntent = PendingIntentCompat.getActivity(
+            applicationContext, SETTINGS_ACTION_CODE,
+            Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                .putExtra(Settings.EXTRA_APP_PACKAGE, applicationContext.packageName)
+                .putExtra(Settings.EXTRA_CHANNEL_ID, WORKER_CHANNEL_ID),
+            0, false,
+        )
+        addAction(
+            R.drawable.ic_settings,
+            applicationContext.getString(R.string.notifications_settings),
+            actionIntent,
+        )
+    }.build()
 
 	private suspend fun processDownload(mangaUpdates: MangaUpdates.Success) {
 		if (!mangaUpdates.isValid || mangaUpdates.newChapters.isEmpty()) {

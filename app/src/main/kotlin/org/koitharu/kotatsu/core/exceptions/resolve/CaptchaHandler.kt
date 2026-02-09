@@ -5,7 +5,6 @@ import android.app.Notification
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.provider.Settings
 import androidx.annotation.CheckResult
 import androidx.annotation.RequiresPermission
@@ -196,50 +195,49 @@ class CaptchaHandler @Inject constructor(
 	}
 
 	private suspend fun buildNotification(exception: CloudFlareProtectedException): Notification {
-		val intent = AppRouter.cloudFlareResolveIntent(context, exception)
-		val discardIntent = Intent(ACTION_DISCARD)
-			.putExtra(AppRouter.KEY_SOURCE, exception.source.name)
-			.setData("source://${exception.source.name}".toUri())
-		val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-			.setContentTitle(context.getString(R.string.captcha_required))
-			.setPriority(NotificationCompat.PRIORITY_LOW)
-			.setDefaults(0)
-			.setSmallIcon(R.drawable.ic_bot)
-			.setGroup(GROUP_CAPTCHA)
-			.setOnlyAlertOnce(true)
-			.setAutoCancel(true)
-			.setDeleteIntent(PendingIntentCompat.getBroadcast(context, 0, discardIntent, 0, false))
-			.setLargeIcon(getFavicon(exception.source))
-			.setVisibility(
-				if (exception.source.isNsfw()) {
-					NotificationCompat.VISIBILITY_SECRET
-				} else {
-					NotificationCompat.VISIBILITY_PUBLIC
-				},
-			)
-			.setContentText(
-				context.getString(
-					R.string.captcha_required_summary,
-					exception.source.getTitle(context),
-				),
-			)
-			.setContentIntent(PendingIntentCompat.getActivity(context, 0, intent, 0, false))
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			val actionIntent = PendingIntentCompat.getActivity(
-				context, SETTINGS_ACTION_CODE,
-				Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
-					.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-					.putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID),
-				0, false,
-			)
-			notification.addAction(
-				R.drawable.ic_settings,
-				context.getString(R.string.notifications_settings),
-				actionIntent,
-			)
-		}
-		return notification.build()
-	}
+        val intent = AppRouter.cloudFlareResolveIntent(context, exception)
+        val discardIntent = Intent(ACTION_DISCARD)
+            .putExtra(AppRouter.KEY_SOURCE, exception.source.name)
+            .setData("source://${exception.source.name}".toUri())
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setContentTitle(context.getString(R.string.captcha_required))
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setDefaults(0)
+            .setSmallIcon(R.drawable.ic_bot)
+            .setGroup(GROUP_CAPTCHA)
+            .setOnlyAlertOnce(true)
+            .setAutoCancel(true)
+            .setDeleteIntent(PendingIntentCompat.getBroadcast(context, 0, discardIntent, 0, false))
+            .setLargeIcon(getFavicon(exception.source))
+            .setVisibility(
+                if (exception.source.isNsfw()) {
+                    NotificationCompat.VISIBILITY_SECRET
+                } else {
+                    NotificationCompat.VISIBILITY_PUBLIC
+                },
+            )
+            .setContentText(
+                context.getString(
+                    R.string.captcha_required_summary,
+                    exception.source.getTitle(context),
+                ),
+            )
+            .setContentIntent(PendingIntentCompat.getActivity(context, 0, intent, 0, false))
+
+        val actionIntent = PendingIntentCompat.getActivity(
+            context, SETTINGS_ACTION_CODE,
+            Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                .putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID),
+            0, false,
+        )
+        notification.addAction(
+            R.drawable.ic_settings,
+            context.getString(R.string.notifications_settings),
+            actionIntent,
+        )
+        return notification.build()
+    }
 
 	private fun String.toMangaSourceOrNull() = MangaSource(this).takeUnless { it == UnknownMangaSource }
 

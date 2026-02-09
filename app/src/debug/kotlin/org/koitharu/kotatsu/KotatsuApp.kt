@@ -42,7 +42,7 @@ class KotatsuApp : BaseApp() {
 				detectDiskWrites()
 				detectCustomSlowCalls()
 				detectResourceMismatches()
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) detectUnbufferedIo()
+				detectUnbufferedIo()
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) detectExplicitGc()
 				penaltyLog()
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && notifier != null) {
@@ -56,16 +56,14 @@ class KotatsuApp : BaseApp() {
 				detectLeakedSqlLiteObjects()
 				detectLeakedClosableObjects()
 				detectLeakedRegistrationObjects()
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-					detectContentUriWithoutPermission()
-				}
-				detectFileUriExposure()
-				penaltyLog()
+                detectContentUriWithoutPermission()
+                detectFileUriExposure()
+                penaltyLog()
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && notifier != null) {
 					penaltyListener(notifier.executor, notifier)
 				}
 			}.build(),
-		)
+        )
 		FragmentStrictMode.defaultPolicy = FragmentStrictMode.Policy.Builder().apply {
 			detectWrongFragmentContainer()
 			detectFragmentTagUsage()
