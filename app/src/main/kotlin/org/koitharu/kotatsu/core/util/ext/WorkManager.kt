@@ -57,11 +57,6 @@ suspend fun WorkManager.awaitFinishedWorkInfosByTag(tag: String): List<WorkInfo>
 }
 
 @SuppressLint("RestrictedApi")
-suspend fun WorkManager.awaitWorkInfoById(id: UUID): WorkInfo? {
-	return getWorkInfoById(id).await()
-}
-
-@SuppressLint("RestrictedApi")
 suspend fun WorkManager.awaitUniqueWorkInfoByName(name: String): List<WorkInfo> {
 	return getWorkInfosForUniqueWork(name).await()
 }
