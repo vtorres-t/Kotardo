@@ -94,7 +94,7 @@ class AppUpdateRepository @Inject constructor(
 			AppVersion(
 				id = json.getLong("id"),
 				url = json.getString("html_url"),
-                branch = (asset.getString("name").splitTwoParts('_')?.second?: "").splitTwoParts('_')?.first ?: "",
+                branch = asset.getString("name").split('_', limit = 2)[1],
                 downloads = asset.getLong("download_count"),
                 createdAt = asset.getString("created_at"),
                 name = json.getString("name").splitTwoParts('v')?.second ?: "",
