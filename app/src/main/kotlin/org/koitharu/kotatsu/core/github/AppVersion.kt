@@ -8,6 +8,7 @@ import kotlinx.parcelize.Parcelize
 data class AppVersion(
 	val id: Long,
 	val name: String,
+    val branch: String,
 	val url: String,
 	val apkSize: Long,
 	val apkUrl: String,

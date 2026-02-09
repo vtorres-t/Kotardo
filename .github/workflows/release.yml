@@ -57,6 +57,11 @@ jobs:
                 versionCode: ${{ env.BUILD_NUMBER }}
                 versionName: ${{ env.VERSION }}.${{ env.BUILD_NUMBER }}
 
+            - name: Extract branch name
+              shell: bash
+              run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+              id: extract_branch
+
             - name: Build release APK
               run: ./gradlew assembleRelease -PSIGNING_KEY_ALIAS=$SIGNING_KEY_ALIAS -PKEYSTORE_PASSWORD=$KEYSTORE_PASSWORD -PKEYSTORE_FILE=./app/key -PSIGNING_KEY_PASSWORD=$SIGNING_KEY_PASSWORD
             
@@ -115,7 +120,7 @@ jobs:
               with:
                 upload_url: ${{ steps.create_release.outputs.upload_url }}
                 asset_path: ${{ steps.releaseApkArm64v8.outputs.apkfileArm64v8 }}
-                asset_name: Kotardo_arm64v8_v${{ env.VERSION }}.${{ env.BUILD_NUMBER }}.apk
+                asset_name: Kotardo_${{ steps.extract_branch.outputs.branch }}_arm64v8_v${{ env.VERSION }}.${{ env.BUILD_NUMBER }}.apk
                 asset_content_type: application/zip
 
             - name: Upload Release APK Armeabiv7a
@@ -126,5 +131,5 @@ jobs:
               with:
                 upload_url: ${{ steps.create_release.outputs.upload_url }}
                 asset_path: ${{ steps.releaseApkArmeabiv7a.outputs.apkfileArmeabiv7a }}
-                asset_name: Kotardo_armeabiv7a_v${{ env.VERSION }}.${{ env.BUILD_NUMBER }}.apk
+                asset_name: Kotardo_${{ steps.extract_branch.outputs.branch }}_armeabiv7a_v${{ env.VERSION }}.${{ env.BUILD_NUMBER }}.apk
                 asset_content_type: application/zip

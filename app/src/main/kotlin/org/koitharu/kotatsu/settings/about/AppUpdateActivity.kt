@@ -124,6 +124,8 @@ class AppUpdateActivity : BaseActivity<ActivityAppUpdateBinding>(), View.OnClick
 			buildSpannedString {
 				append(getString(R.string.new_version_s, version.name))
 				appendLine()
+                append(getString(R.string.branch_s, version.branch))
+                appendLine()
 				append(getString(R.string.size_s, FileSize.BYTES.format(this@AppUpdateActivity, version.apkSize)))
 				appendLine()
 				appendLine()
