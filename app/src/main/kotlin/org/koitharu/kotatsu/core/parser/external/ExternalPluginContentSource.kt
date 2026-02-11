@@ -7,6 +7,7 @@ import androidx.collection.ArraySet
 import androidx.core.net.toUri
 import org.jetbrains.annotations.Blocking
 import org.koitharu.kotatsu.core.exceptions.IncompatiblePluginException
+import org.koitharu.kotatsu.parsers.InternalParsersApi
 import org.koitharu.kotatsu.parsers.model.ContentRating
 import org.koitharu.kotatsu.parsers.model.ContentType
 import org.koitharu.kotatsu.parsers.model.Demographic
@@ -27,6 +28,7 @@ import org.koitharu.kotatsu.parsers.util.splitTwoParts
 import java.util.EnumSet
 import java.util.Locale
 
+@OptIn(InternalParsersApi::class)
 class ExternalPluginContentSource(
 	private val contentResolver: ContentResolver,
 	private val source: ExternalMangaSource,

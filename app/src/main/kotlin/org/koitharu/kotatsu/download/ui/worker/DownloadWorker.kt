@@ -164,18 +164,13 @@ class DownloadWorker @AssistedInject constructor(
 		}
 	}
 
-	override suspend fun getForegroundInfo() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-		ForegroundInfo(
-			id.hashCode(),
-			notificationFactory.create(lastPublishedState),
-			ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC,
-		)
-	} else {
-		ForegroundInfo(
-			id.hashCode(),
-			notificationFactory.create(lastPublishedState),
-		)
-	}
+	override suspend fun getForegroundInfo() : ForegroundInfo {
+        return ForegroundInfo(
+            id.hashCode(),
+            notificationFactory.create(lastPublishedState),
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC,
+        )
+    }
 
 	private suspend fun downloadMangaImpl(
 		subject: Manga,
