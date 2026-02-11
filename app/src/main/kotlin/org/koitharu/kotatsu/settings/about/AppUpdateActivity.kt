@@ -1,24 +1,20 @@
 package org.koitharu.kotatsu.settings.about
 
-import android.Manifest
 import android.app.DownloadManager
 import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +22,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 import org.koitharu.kotatsu.R
 import org.koitharu.kotatsu.core.github.AppVersion
-import org.koitharu.kotatsu.core.nav.router
 import org.koitharu.kotatsu.core.ui.BaseActivity
 import org.koitharu.kotatsu.core.util.FileSize
 import org.koitharu.kotatsu.core.util.ext.consumeAllSystemBarsInsets
@@ -47,16 +42,6 @@ class AppUpdateActivity : BaseActivity<ActivityAppUpdateBinding>(), View.OnClick
 
     private val viewModel: AppUpdateViewModel by viewModels()
     private lateinit var downloadReceiver: UpdateDownloadReceiver
-
-    private val permissionRequest = registerForActivityResult(
-        ActivityResultContracts.RequestPermission(),
-    ) {
-        if (it) {
-            viewModel.startDownload()
-        } else {
-            openInBrowser()
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,18 +137,7 @@ class AppUpdateActivity : BaseActivity<ActivityAppUpdateBinding>(), View.OnClick
             }
             return
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            permissionRequest.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        } else {
-            viewModel.startDownload()
-        }
-    }
-
-    private fun openInBrowser() {
-        val latestVersion = viewModel.nextVersion.value ?: return
-        if (!router.openExternalBrowser(latestVersion.url, getString(R.string.open_in_browser))) {
-            Snackbar.make(viewBinding.scrollView, R.string.operation_not_supported, Snackbar.LENGTH_SHORT).show()
-        }
+        viewModel.startDownload()
     }
 
     private fun onProgressChanged(value: Pair<Boolean, Float>) {

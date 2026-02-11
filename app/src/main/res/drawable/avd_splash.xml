@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<animated-vector xmlns:tools="http://schemas.android.com/tools"
+<animated-vector
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:aapt="http://schemas.android.com/aapt">
 	<aapt:attr name="android:drawable">
@@ -44,7 +44,7 @@
 							android:fillColor="@color/m3_sys_color_dynamic_light_primary"
 							android:fillAlpha="0"
 							android:strokeWidth="1"
-							tools:targetApi="s" />
+							 />
 					</group>
 				</group>
 			</group>

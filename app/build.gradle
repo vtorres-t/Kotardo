@@ -24,7 +24,7 @@ android {
 
 	defaultConfig {
         applicationId 'org.koitharu.kotatsu'
-		minSdk = 27
+		minSdk = 31
 		targetSdk = 36
 		versionCode = 1047
 		versionName = '9.6.4'
