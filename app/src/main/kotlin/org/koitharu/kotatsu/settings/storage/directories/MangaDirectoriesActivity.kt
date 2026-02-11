@@ -59,27 +59,26 @@ class MangaDirectoriesActivity : BaseActivity<ActivityMangaDirectoriesBinding>()
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(ActivityMangaDirectoriesBinding.inflate(layoutInflater))
-		setDisplayHomeAsUp(isEnabled = true, showUpAsClose = false)
-		val adapter = AsyncListDifferDelegationAdapter(DirectoryConfigDiffCallback(), directoryConfigAD(this))
+        super.onCreate(savedInstanceState)
+        setContentView(ActivityMangaDirectoriesBinding.inflate(layoutInflater))
+        setDisplayHomeAsUp(isEnabled = true, showUpAsClose = false)
+        val adapter = AsyncListDifferDelegationAdapter(DirectoryConfigDiffCallback(), directoryConfigAD(this))
         val spacing = resources.getDimensionPixelOffset(R.dimen.list_spacing_large)
         viewBinding.recyclerView.adapter = adapter
         viewBinding.recyclerView.addItemDecoration(SpacingItemDecoration(spacing, withBottomPadding = false))
         viewBinding.fabAdd.setOnClickListener(this)
 
         viewModel.items.observe(this) { adapter.items = it }
-
-		viewModel.isLoading.observe(this) {
+        viewModel.isLoading.observe(this) {
             viewBinding.progressBar.isVisible = it
         }
-		viewModel.onError.observeEvent(
-			this,
-			SnackbarErrorObserver(viewBinding.root, null, exceptionResolver) {
-				if (it) viewModel.updateList()
-			},
-		)
-	}
+        viewModel.onError.observeEvent(
+            this,
+            SnackbarErrorObserver(viewBinding.root, null, exceptionResolver) {
+                if (it) viewModel.updateList()
+            },
+        )
+    }
 
 	override fun onItemClick(item: DirectoryConfigModel, view: View) {
 		viewModel.onRemoveClick(item.path)
