@@ -39,6 +39,8 @@ import org.koitharu.kotatsu.core.util.ext.showOrHide
 import org.koitharu.kotatsu.core.util.ext.systemBarsInsets
 import org.koitharu.kotatsu.core.util.ext.textAndVisible
 import org.koitharu.kotatsu.databinding.ActivityAppUpdateBinding
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class AppUpdateActivity : BaseActivity<ActivityAppUpdateBinding>(), View.OnClickListener {
@@ -120,6 +122,8 @@ class AppUpdateActivity : BaseActivity<ActivityAppUpdateBinding>(), View.OnClick
 			return
 		}
 		val markwon = Markwon.create(this)
+        val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss")
+        val date = OffsetDateTime.parse(version.createdAt, DateTimeFormatter.ISO_DATE_TIME).format(formatter)
 		val message = withContext(Dispatchers.Default) {
 			buildSpannedString {
 				append(getString(R.string.new_version_s, version.name))
@@ -128,7 +132,7 @@ class AppUpdateActivity : BaseActivity<ActivityAppUpdateBinding>(), View.OnClick
                 appendLine()
                 append(getString(R.string.downloads_s, version.downloads.toString()))
                 appendLine()
-                append(getString(R.string.created_at_s, version.createdAt))
+                append(getString(R.string.created_at_s, date))
                 appendLine()
 				append(getString(R.string.size_s, FileSize.BYTES.format(this@AppUpdateActivity, version.apkSize)))
 				appendLine()
