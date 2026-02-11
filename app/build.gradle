@@ -6,7 +6,6 @@ plugins {
 	id 'kotlin-parcelize'
 	id 'dagger.hilt.android.plugin'
 	id 'androidx.room'
-	id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 android {
@@ -186,8 +185,6 @@ dependencies {
 	implementation libs.disk.lru.cache
 	implementation libs.markwon
 
-	implementation libs.conscrypt.android
-
 	debugImplementation libs.leakcanary.android
 	debugImplementation libs.workinspector
 
@@ -207,4 +204,7 @@ dependencies {
 
 	androidTestImplementation libs.hilt.android.testing
 	kspAndroidTest libs.hilt.android.compiler
+}
+configurations.configureEach {
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-android-extensions-runtime'
 }
