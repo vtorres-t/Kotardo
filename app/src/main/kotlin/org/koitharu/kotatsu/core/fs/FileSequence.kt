@@ -1,7 +1,5 @@
 package org.koitharu.kotatsu.core.fs
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import org.koitharu.kotatsu.core.util.CloseableSequence
 import org.koitharu.kotatsu.core.util.iterator.MappingIterator
 import java.io.File
@@ -10,7 +8,6 @@ import java.nio.file.Path
 
 sealed interface FileSequence : CloseableSequence<File> {
 
-	@RequiresApi(Build.VERSION_CODES.O)
 	class StreamImpl(dir: File) : FileSequence {
 
 		private val stream = Files.newDirectoryStream(dir.toPath())

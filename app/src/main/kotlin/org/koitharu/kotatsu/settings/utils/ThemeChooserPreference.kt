@@ -2,7 +2,6 @@ package org.koitharu.kotatsu.settings.utils
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
@@ -31,159 +30,156 @@ class ThemeChooserPreference @JvmOverloads constructor(
 	defStyleRes: Int = R.style.Preference_ThemeChooser,
 ) : Preference(context, attrs, defStyleAttr, defStyleRes) {
 
-	private val entries = ColorScheme.getAvailableList()
-	private var currentValue: ColorScheme = ColorScheme.default
-	private val lastScrollPosition = intArrayOf(-1)
-	private val itemClickListener = View.OnClickListener {
-		val tag = it.tag as? ColorScheme ?: return@OnClickListener
-		setValueInternal(tag.name, true)
-	}
-	private var scrollPersistListener: ScrollPersistListener? = null
+    private val entries = ColorScheme.getAvailableList()
+    private var currentValue: ColorScheme = ColorScheme.default
+    private val lastScrollPosition = intArrayOf(-1)
+    private val itemClickListener = View.OnClickListener {
+        val tag = it.tag as? ColorScheme ?: return@OnClickListener
+        setValueInternal(tag.name, true)
+    }
+    private var scrollPersistListener: ScrollPersistListener? = null
 
-	var value: String
-		get() = currentValue.name
-		set(value) = setValueInternal(value, notifyChanged = true)
+    var value: String
+        get() = currentValue.name
+        set(value) = setValueInternal(value, notifyChanged = true)
 
-	override fun onBindViewHolder(holder: PreferenceViewHolder) {
-		super.onBindViewHolder(holder)
-		val binding = PreferenceThemeBinding.bind(holder.itemView)
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-			binding.scrollView.suppressLayout(true)
-			binding.linear.suppressLayout(true)
-		}
-		binding.linear.removeAllViews()
-		for (theme in entries) {
-			val context = ContextThemeWrapper(context, theme.styleResId)
-			val item =
-				ItemColorSchemeBinding.inflate(LayoutInflater.from(context), binding.linear, false)
-			if (binding.linear.isEmpty()) {
-				item.root.updatePaddingRelative(start = 0)
-			}
-			val isSelected = theme == currentValue
-			item.card.isChecked = isSelected
-			item.card.strokeWidth = if (isSelected) context.resources.getDimensionPixelSize(
-				materialR.dimen.m3_comp_outlined_card_outline_width,
-			) else 0
-			item.textViewTitle.setText(theme.titleResId)
-			item.root.tag = theme
-			item.card.tag = theme
-			item.imageViewCheck.isVisible = theme == currentValue
-			item.root.setOnClickListener(itemClickListener)
-			item.card.setOnClickListener(itemClickListener)
-			binding.linear.addView(item.root)
-			if (isSelected) {
-				item.root.requestFocus()
-			}
-		}
-		if (lastScrollPosition[0] >= 0) {
-			val scroller = Scroller(binding.scrollView, lastScrollPosition[0])
-			scroller.run()
-			binding.scrollView.post(scroller)
-		}
-		binding.scrollView.viewTreeObserver.run {
-			scrollPersistListener?.let { removeOnScrollChangedListener(it) }
-			scrollPersistListener =
-				ScrollPersistListener(WeakReference(binding.scrollView), lastScrollPosition)
-			addOnScrollChangedListener(scrollPersistListener)
-		}
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-			binding.linear.suppressLayout(false)
-			binding.scrollView.suppressLayout(false)
-		}
-	}
+    override fun onBindViewHolder(holder: PreferenceViewHolder) {
+        super.onBindViewHolder(holder)
+        val binding = PreferenceThemeBinding.bind(holder.itemView)
+        binding.scrollView.suppressLayout(true)
+        binding.linear.suppressLayout(true)
 
-	override fun onSetInitialValue(defaultValue: Any?) {
-		value = getPersistedString(
-			when (defaultValue) {
-				is String -> ColorScheme.safeValueOf(defaultValue) ?: ColorScheme.default
-				is ColorScheme -> defaultValue
-				else -> ColorScheme.default
-			}.name,
-		)
-	}
+        binding.linear.removeAllViews()
+        for (theme in entries) {
+            val context = ContextThemeWrapper(context, theme.styleResId)
+            val item =
+                ItemColorSchemeBinding.inflate(LayoutInflater.from(context), binding.linear, false)
+            if (binding.linear.isEmpty()) {
+                item.root.updatePaddingRelative(start = 0)
+            }
+            val isSelected = theme == currentValue
+            item.card.isChecked = isSelected
+            item.card.strokeWidth = if (isSelected) context.resources.getDimensionPixelSize(
+                materialR.dimen.m3_comp_outlined_card_outline_width,
+            ) else 0
+            item.textViewTitle.setText(theme.titleResId)
+            item.root.tag = theme
+            item.card.tag = theme
+            item.imageViewCheck.isVisible = theme == currentValue
+            item.root.setOnClickListener(itemClickListener)
+            item.card.setOnClickListener(itemClickListener)
+            binding.linear.addView(item.root)
+            if (isSelected) {
+                item.root.requestFocus()
+            }
+        }
+        if (lastScrollPosition[0] >= 0) {
+            val scroller = Scroller(binding.scrollView, lastScrollPosition[0])
+            scroller.run()
+            binding.scrollView.post(scroller)
+        }
+        binding.scrollView.viewTreeObserver.run {
+            scrollPersistListener?.let { removeOnScrollChangedListener(it) }
+            scrollPersistListener =
+                ScrollPersistListener(WeakReference(binding.scrollView), lastScrollPosition)
+            addOnScrollChangedListener(scrollPersistListener)
+        }
+        binding.linear.suppressLayout(false)
+        binding.scrollView.suppressLayout(false)
+    }
 
-	override fun onGetDefaultValue(a: TypedArray, index: Int): Any {
-		return a.getInt(index, 0)
-	}
+    override fun onSetInitialValue(defaultValue: Any?) {
+        value = getPersistedString(
+            when (defaultValue) {
+                is String -> ColorScheme.safeValueOf(defaultValue) ?: ColorScheme.default
+                is ColorScheme -> defaultValue
+                else -> ColorScheme.default
+            }.name,
+        )
+    }
 
-	override fun onSaveInstanceState(): Parcelable? {
-		val superState = super.onSaveInstanceState() ?: return null
-		return SavedState(
-			superState = superState,
-			scrollPosition = lastScrollPosition[0],
-		)
-	}
+    override fun onGetDefaultValue(a: TypedArray, index: Int): Any {
+        return a.getInt(index, 0)
+    }
 
-	override fun onRestoreInstanceState(state: Parcelable?) {
-		if (state !is SavedState) {
-			super.onRestoreInstanceState(state)
-			return
-		}
-		super.onRestoreInstanceState(state.superState)
-		lastScrollPosition[0] = state.scrollPosition
-	}
+    override fun onSaveInstanceState(): Parcelable? {
+        val superState = super.onSaveInstanceState() ?: return null
+        return SavedState(
+            superState = superState,
+            scrollPosition = lastScrollPosition[0],
+        )
+    }
 
-	private fun setValueInternal(enumName: String, notifyChanged: Boolean) {
-		val newValue = ColorScheme.safeValueOf(enumName) ?: return
-		if (newValue != currentValue) {
-			currentValue = newValue
-			persistString(newValue.name)
-			if (notifyChanged) {
-				notifyChanged()
-			}
-		}
-	}
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        if (state !is SavedState) {
+            super.onRestoreInstanceState(state)
+            return
+        }
+        super.onRestoreInstanceState(state.superState)
+        lastScrollPosition[0] = state.scrollPosition
+    }
 
-	private class SavedState : AbsSavedState {
+    private fun setValueInternal(enumName: String, notifyChanged: Boolean) {
+        val newValue = ColorScheme.safeValueOf(enumName) ?: return
+        if (newValue != currentValue) {
+            currentValue = newValue
+            persistString(newValue.name)
+            if (notifyChanged) {
+                notifyChanged()
+            }
+        }
+    }
 
-		val scrollPosition: Int
+    private class SavedState : AbsSavedState {
 
-		constructor(
-			superState: Parcelable,
-			scrollPosition: Int,
-		) : super(superState) {
-			this.scrollPosition = scrollPosition
-		}
+        val scrollPosition: Int
 
-		constructor(source: Parcel, classLoader: ClassLoader?) : super(source, classLoader) {
-			scrollPosition = source.readInt()
-		}
+        constructor(
+            superState: Parcelable,
+            scrollPosition: Int,
+        ) : super(superState) {
+            this.scrollPosition = scrollPosition
+        }
 
-		override fun writeToParcel(out: Parcel, flags: Int) {
-			super.writeToParcel(out, flags)
-			out.writeInt(scrollPosition)
-		}
+        constructor(source: Parcel, classLoader: ClassLoader?) : super(source, classLoader) {
+            scrollPosition = source.readInt()
+        }
 
-		companion object {
-			@Suppress("unused")
-			@JvmField
-			val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
-				override fun createFromParcel(`in`: Parcel) =
-					SavedState(`in`, SavedState::class.java.classLoader)
+        override fun writeToParcel(out: Parcel, flags: Int) {
+            super.writeToParcel(out, flags)
+            out.writeInt(scrollPosition)
+        }
 
-				override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
-			}
-		}
-	}
+        companion object {
+            @Suppress("unused")
+            @JvmField
+            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+                override fun createFromParcel(`in`: Parcel) =
+                    SavedState(`in`, SavedState::class.java.classLoader)
 
-	private class ScrollPersistListener(
-		private val scrollViewRef: WeakReference<HorizontalScrollView>,
-		private val lastScrollPosition: IntArray,
-	) : ViewTreeObserver.OnScrollChangedListener {
+                override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
+            }
+        }
+    }
 
-		override fun onScrollChanged() {
-			val scrollView = scrollViewRef.get() ?: return
-			lastScrollPosition[0] = scrollView.scrollX
-		}
-	}
+    private class ScrollPersistListener(
+        private val scrollViewRef: WeakReference<HorizontalScrollView>,
+        private val lastScrollPosition: IntArray,
+    ) : ViewTreeObserver.OnScrollChangedListener {
 
-	private class Scroller(
-		private val scrollView: HorizontalScrollView,
-		private val position: Int,
-	) : Runnable {
+        override fun onScrollChanged() {
+            val scrollView = scrollViewRef.get() ?: return
+            lastScrollPosition[0] = scrollView.scrollX
+        }
+    }
 
-		override fun run() {
-			scrollView.scrollTo(position, 0)
-		}
-	}
+    private class Scroller(
+        private val scrollView: HorizontalScrollView,
+        private val position: Int,
+    ) : Runnable {
+
+        override fun run() {
+            scrollView.scrollTo(position, 0)
+        }
+    }
 }

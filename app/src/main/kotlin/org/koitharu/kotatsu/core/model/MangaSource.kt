@@ -1,7 +1,6 @@
 package org.koitharu.kotatsu.core.model
 
 import android.content.Context
-import android.os.Build
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
 import android.widget.TextView
@@ -106,10 +105,6 @@ fun SpannableStringBuilder.appendIcon(textView: TextView, @DrawableRes resId: In
 	icon.setTintList(textView.textColors)
 	val size = textView.lineHeight
 	icon.setBounds(0, 0, size, size)
-	val alignment = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-		ImageSpan.ALIGN_CENTER
-	} else {
-		ImageSpan.ALIGN_BOTTOM
-	}
+	val alignment = ImageSpan.ALIGN_CENTER
 	return inSpans(ImageSpan(icon, alignment)) { append(' ') }
 }

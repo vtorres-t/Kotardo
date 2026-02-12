@@ -1,16 +1,12 @@
 package org.koitharu.kotatsu.local.data
 
-import android.Manifest
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import android.os.StatFs
 import androidx.annotation.WorkerThread
-import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import dagger.Reusable
 import kotlinx.coroutines.Dispatchers
@@ -115,17 +111,8 @@ class LocalStorageManager @Inject constructor(
 	}
 
 	fun hasExternalStoragePermission(isReadOnly: Boolean): Boolean {
-		return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-			Environment.isExternalStorageManager()
-		} else {
-			val permission = if (isReadOnly) {
-				Manifest.permission.READ_EXTERNAL_STORAGE
-			} else {
-				Manifest.permission.WRITE_EXTERNAL_STORAGE
-			}
-			ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
-		}
-	}
+        return Environment.isExternalStorageManager()
+    }
 
 	suspend fun getDirectoryDisplayName(dir: File, isFullPath: Boolean): String = runInterruptible(Dispatchers.IO) {
 		val packageName = context.packageName

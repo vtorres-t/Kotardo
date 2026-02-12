@@ -3,7 +3,6 @@ package org.koitharu.kotatsu.tracker.work
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
-import android.os.Build
 import android.provider.Settings
 import androidx.annotation.CheckResult
 import androidx.core.app.NotificationChannelCompat
@@ -175,25 +174,21 @@ class TrackWorker @AssistedInject constructor(
 	}
 
 	override suspend fun getForegroundInfo(): ForegroundInfo {
-		val channel = NotificationChannelCompat.Builder(
-			WORKER_CHANNEL_ID,
-			NotificationManagerCompat.IMPORTANCE_LOW,
-		)
-			.setName(applicationContext.getString(R.string.check_for_new_chapters))
-			.setShowBadge(false)
-			.setVibrationEnabled(false)
-			.setSound(null, null)
-			.setLightsEnabled(false)
-			.build()
-		notificationManager.createNotificationChannel(channel)
+        val channel = NotificationChannelCompat.Builder(
+            WORKER_CHANNEL_ID,
+            NotificationManagerCompat.IMPORTANCE_LOW,
+        )
+            .setName(applicationContext.getString(R.string.check_for_new_chapters))
+            .setShowBadge(false)
+            .setVibrationEnabled(false)
+            .setSound(null, null)
+            .setLightsEnabled(false)
+            .build()
+        notificationManager.createNotificationChannel(channel)
 
-		val notification = createWorkerNotification(0, 0)
-		return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-			ForegroundInfo(WORKER_NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
-		} else {
-			ForegroundInfo(WORKER_NOTIFICATION_ID, notification)
-		}
-	}
+        val notification = createWorkerNotification(0, 0)
+        return ForegroundInfo(WORKER_NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+    }
 
 	private fun createWorkerNotification(max: Int, progress: Int) = NotificationCompat.Builder(
 		applicationContext,

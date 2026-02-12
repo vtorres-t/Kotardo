@@ -5,10 +5,8 @@ import android.app.Notification.BigTextStyle
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import android.os.StrictMode
 import android.os.strictmode.Violation
-import androidx.annotation.RequiresApi
 import androidx.core.app.PendingIntentCompat
 import androidx.core.content.getSystemService
 import androidx.fragment.app.strictmode.FragmentStrictMode
@@ -18,7 +16,6 @@ import org.koitharu.kotatsu.core.util.ShareHelper
 import kotlin.math.absoluteValue
 import androidx.fragment.app.strictmode.Violation as FragmentViolation
 
-@RequiresApi(Build.VERSION_CODES.P)
 class StrictModeNotifier(
 	private val context: Context,
 ) : StrictMode.OnVmViolationListener, StrictMode.OnThreadViolationListener, FragmentStrictMode.OnViolationListener {

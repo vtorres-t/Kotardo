@@ -8,8 +8,6 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.annotation.StyleRes
 import androidx.core.content.withStyledAttributes
 import androidx.core.graphics.withClip
@@ -91,7 +89,6 @@ open class FaviconDrawable(
 
 	override fun isStateful(): Boolean = colorStroke.isStateful || colorBackground.isStateful
 
-	@RequiresApi(Build.VERSION_CODES.S)
 	override fun hasFocusStateSpecified(): Boolean =
 		colorBackground.hasFocusStateSpecified() || colorStroke.hasFocusStateSpecified()
 

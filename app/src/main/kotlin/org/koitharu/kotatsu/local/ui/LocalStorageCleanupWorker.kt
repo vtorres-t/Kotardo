@@ -3,7 +3,6 @@ package org.koitharu.kotatsu.local.ui
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
-import android.os.Build
 import android.provider.Settings
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
@@ -94,11 +93,11 @@ class LocalStorageCleanupWorker @AssistedInject constructor(
             applicationContext.getString(R.string.notifications_settings),
             actionIntent,
         )
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ForegroundInfo(WORKER_NOTIFICATION_ID, notification.build(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
-        } else {
-            ForegroundInfo(WORKER_NOTIFICATION_ID, notification.build())
-        }
+        return ForegroundInfo(
+            WORKER_NOTIFICATION_ID,
+            notification.build(),
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+        )
     }
 
 	companion object {
