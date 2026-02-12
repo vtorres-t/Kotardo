@@ -32,11 +32,7 @@ object BitmapDecoderCompat {
 	@Blocking
 	fun decode(file: File): Bitmap = when (val format = probeMimeType(file)?.subtype) {
 		FORMAT_AVIF -> file.source().buffer().use { decodeAvif(it.readByteBuffer()) }
-		else -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-			ImageDecoder.decodeBitmap(ImageDecoder.createSource(file))
-		} else {
-			checkBitmapNotNull(BitmapFactory.decodeFile(file.absolutePath), format)
-		}
+		else -> ImageDecoder.decodeBitmap(ImageDecoder.createSource(file))
 	}
 
 	@Blocking
@@ -44,11 +40,6 @@ object BitmapDecoderCompat {
 		val format = type?.subtype
 		if (format == FORMAT_AVIF) {
 			return decodeAvif(stream.toByteBuffer())
-		}
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-			val opts = BitmapFactory.Options()
-			opts.inMutable = isMutable
-			return checkBitmapNotNull(BitmapFactory.decodeStream(stream, null, opts), format)
 		}
 		val byteBuffer = stream.toByteBuffer()
 		return if (AvifDecoder.isAvifImage(byteBuffer)) {
@@ -60,12 +51,7 @@ object BitmapDecoderCompat {
 
 	@Blocking
 	fun createRegionDecoder(inoutStream: InputStream): BitmapRegionDecoder? = try {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 			BitmapRegionDecoder.newInstance(inoutStream)
-		} else {
-			@Suppress("DEPRECATION")
-			BitmapRegionDecoder.newInstance(inoutStream, false)
-		}
 	} catch (e: IOException) {
 		e.printStackTraceDebug()
 		null
@@ -106,7 +92,6 @@ object BitmapDecoderCompat {
 		return bitmap
 	}
 
-	@RequiresApi(Build.VERSION_CODES.P)
 	private class DecoderConfigListener(
 		private val isMutable: Boolean,
 	) : ImageDecoder.OnHeaderDecodedListener {

@@ -2,7 +2,6 @@ package org.koitharu.kotatsu.core
 
 import android.app.Application
 import android.content.Context
-import android.os.Build
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.hilt.work.HiltWorkerFactory
@@ -13,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import okhttp3.internal.platform.PlatformRegistry
-import org.conscrypt.Conscrypt
 import org.koitharu.kotatsu.core.db.MangaDatabase
 import org.koitharu.kotatsu.core.prefs.AppSettings
 import org.koitharu.kotatsu.core.util.ext.processLifecycleScope
@@ -21,7 +19,6 @@ import org.koitharu.kotatsu.local.data.LocalStorageChanges
 import org.koitharu.kotatsu.local.data.index.LocalMangaIndex
 import org.koitharu.kotatsu.local.domain.model.LocalManga
 import org.koitharu.kotatsu.settings.work.WorkScheduleManager
-import java.security.Security
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -62,10 +59,6 @@ open class BaseApp : Application(), Configuration.Provider {
 		super.onCreate()
 		PlatformRegistry.applicationContext = this // TODO replace with OkHttp.initialize
 		AppCompatDelegate.setDefaultNightMode(settings.theme)
-		// TLS 1.3 support for Android < 10
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-			Security.insertProviderAt(Conscrypt.newProvider(), 1)
-		}
 		setupActivityLifecycleCallbacks()
 		processLifecycleScope.launch(Dispatchers.Default) {
 			setupDatabaseObservers()

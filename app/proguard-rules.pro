@@ -10,8 +10,6 @@
 }
 
 -dontwarn okhttp3.internal.platform.**
--dontwarn org.conscrypt.**
--dontwarn org.bouncycastle.**
 -dontwarn org.openjsse.**
 -dontwarn com.google.j2objc.annotations.**
 -dontwarn coil3.PlatformContext
