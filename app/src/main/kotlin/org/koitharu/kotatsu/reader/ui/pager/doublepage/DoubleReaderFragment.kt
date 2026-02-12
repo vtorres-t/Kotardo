@@ -15,6 +15,7 @@ import org.koitharu.kotatsu.R
 import org.koitharu.kotatsu.core.os.NetworkState
 import org.koitharu.kotatsu.core.prefs.AppSettings
 import org.koitharu.kotatsu.core.ui.list.lifecycle.RecyclerViewLifecycleDispatcher
+import org.koitharu.kotatsu.core.util.ext.firstVisibleItemPosition
 import org.koitharu.kotatsu.databinding.FragmentReaderDoubleBinding
 import org.koitharu.kotatsu.reader.domain.PageLoader
 import org.koitharu.kotatsu.reader.ui.ReaderState
