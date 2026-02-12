@@ -6,8 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.annotation.StyleRes
 import androidx.appcompat.content.res.AppCompatResources
 import org.koitharu.kotatsu.R
@@ -143,7 +141,6 @@ class ReadingProgressDrawable(
 		textColor.isStateful ||
 		checkDrawable?.isStateful == true
 
-	@RequiresApi(Build.VERSION_CODES.S)
 	override fun hasFocusStateSpecified(): Boolean = lineColor.hasFocusStateSpecified() ||
 		outlineColor.hasFocusStateSpecified() ||
 		backgroundColor.hasFocusStateSpecified() ||

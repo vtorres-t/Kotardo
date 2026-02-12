@@ -1,9 +1,7 @@
 package org.koitharu.kotatsu.core.util.ext
 
 import android.content.Context
-import android.graphics.Point
 import android.graphics.Rect
-import android.os.Build
 import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
@@ -12,7 +10,6 @@ import android.widget.Checkable
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.ActionMenuView
 import androidx.appcompat.widget.Toolbar
-import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.children
 import androidx.core.view.descendants
 import androidx.core.view.isVisible
@@ -169,11 +166,7 @@ fun BaseProgressIndicator<*>.showOrHide(value: Boolean) {
 }
 
 fun View.setTooltipCompat(tooltip: CharSequence?) {
-	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-		tooltipText = tooltip
-	} else if (!isLongClickable) { // don't use TooltipCompat if has a LongClickListener
-		TooltipCompat.setTooltipText(this, tooltip)
-	}
+    tooltipText = tooltip
 }
 
 fun View.setTooltipCompat(@StringRes tooltipResId: Int) = setTooltipCompat(context.getString(tooltipResId))
@@ -208,15 +201,8 @@ fun View.setContentDescriptionAndTooltip(@StringRes resId: Int) {
 }
 
 fun View.getWindowBounds(): Rect {
-	val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-	return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-		wm.currentWindowMetrics.bounds
-	} else {
-		val size = Point()
-		@Suppress("DEPRECATION")
-		display.getSize(size)
-		Rect(0, 0, size.x, size.y)
-	}
+    val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    return wm.currentWindowMetrics.bounds
 }
 
 fun View.isOnScreen(): Boolean {

@@ -26,19 +26,19 @@ import androidx.appcompat.R as appcompatR
 @AndroidEntryPoint
 class LocalInfoDialog : AlertDialogFragment<DialogLocalInfoBinding>(), View.OnClickListener {
 
-	private val viewModel: LocalInfoViewModel by viewModels()
+    private val viewModel: LocalInfoViewModel by viewModels()
 
-	override fun onBuildDialog(builder: MaterialAlertDialogBuilder): MaterialAlertDialogBuilder {
-		return super.onBuildDialog(builder).setTitle(R.string.saved_manga).setNegativeButton(R.string.close, null)
-	}
+    override fun onBuildDialog(builder: MaterialAlertDialogBuilder): MaterialAlertDialogBuilder {
+        return super.onBuildDialog(builder).setTitle(R.string.saved_manga).setNegativeButton(R.string.close, null)
+    }
 
-	override fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup?): DialogLocalInfoBinding {
-		return DialogLocalInfoBinding.inflate(inflater, container, false)
-	}
+    override fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup?): DialogLocalInfoBinding {
+        return DialogLocalInfoBinding.inflate(inflater, container, false)
+    }
 
-	override fun onViewBindingCreated(binding: DialogLocalInfoBinding, savedInstanceState: Bundle?) {
-		super.onViewBindingCreated(binding, savedInstanceState)
-		viewModel.path.observe(this) {
+    override fun onViewBindingCreated(binding: DialogLocalInfoBinding, savedInstanceState: Bundle?) {
+        super.onViewBindingCreated(binding, savedInstanceState)
+        viewModel.path.observe(this) {
             binding.textViewPath.text = it
         }
         binding.chipCleanup.setOnClickListener(this)
@@ -52,17 +52,17 @@ class LocalInfoDialog : AlertDialogFragment<DialogLocalInfoBinding>(), View.OnCl
                 }
             }
 
-		viewModel.onCleanedUp.observeEvent(viewLifecycleOwner, ::onCleanedUp)
+        viewModel.onCleanedUp.observeEvent(viewLifecycleOwner, ::onCleanedUp)
         viewModel.onAllCleanedUp.observeEvent(viewLifecycleOwner, ::onAllCleanedUp)
-		viewModel.isCleaningUp.observe(viewLifecycleOwner) { loading ->
-			binding.chipCleanup.isClickable = !loading
-			dialog?.setCancelable(!loading)
-			if (loading) {
-				binding.chipCleanup.setProgressIcon()
-			} else {
-				binding.chipCleanup.setChipIconResource(R.drawable.ic_delete)
-			}
-		}
+        viewModel.isCleaningUp.observe(viewLifecycleOwner) { loading ->
+            binding.chipCleanup.isClickable = !loading
+            dialog?.setCancelable(!loading)
+            if (loading) {
+                binding.chipCleanup.setProgressIcon()
+            } else {
+                binding.chipCleanup.setChipIconResource(R.drawable.ic_delete)
+            }
+        }
         viewModel.isAllCleaningUp.observe(viewLifecycleOwner) { loading ->
             binding.chipAllcleanup.isClickable = !loading
             dialog?.setCancelable(!loading)
@@ -72,55 +72,55 @@ class LocalInfoDialog : AlertDialogFragment<DialogLocalInfoBinding>(), View.OnCl
                 binding.chipAllcleanup.setChipIconResource(R.drawable.ic_delete)
             }
         }
-	}
+    }
 
-	override fun onClick(v: View) {
-		when (v.id) {
-			R.id.chip_cleanup -> viewModel.cleanup()
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.chip_cleanup -> viewModel.cleanup()
             R.id.chip_allcleanup -> viewModel.allCleanup()
-		}
-	}
+        }
+    }
 
     private fun onAllCleanedUp(result: Boolean) {
         val c = context ?: return
         Toast.makeText(c, c.getString(R.string.delete_all_chapters), Toast.LENGTH_SHORT).show()
     }
 
-	private fun onCleanedUp(result: Pair<Int, Long>) {
-		val c = context ?: return
-		val text = if (result.first == 0 && result.second == 0L) {
-			c.getString(R.string.no_chapters_deleted)
-		} else {
-			c.getString(
-				R.string.chapters_deleted_pattern,
-				c.resources.getQuantityStringSafe(R.plurals.chapters, result.first, result.first),
-				FileSize.BYTES.format(c, result.second),
-			)
-		}
-		Toast.makeText(c, text, Toast.LENGTH_SHORT).show()
-	}
+    private fun onCleanedUp(result: Pair<Int, Long>) {
+        val c = context ?: return
+        val text = if (result.first == 0 && result.second == 0L) {
+            c.getString(R.string.no_chapters_deleted)
+        } else {
+            c.getString(
+                R.string.chapters_deleted_pattern,
+                c.resources.getQuantityStringSafe(R.plurals.chapters, result.first, result.first),
+                FileSize.BYTES.format(c, result.second),
+            )
+        }
+        Toast.makeText(c, text, Toast.LENGTH_SHORT).show()
+    }
 
-	private fun setSegments(size: Long, available: Long) {
-		val view = viewBinding?.barView ?: return
-		val total = size + available
-		val segment = SegmentedBarView.Segment(
-			percent = (size.toDouble() / total.toDouble()).toFloat(),
-			color = KotatsuColors.segmentColor(view.context, appcompatR.attr.colorPrimary),
-		)
-		requireViewBinding().labelUsed.text = view.context.getString(
-			R.string.memory_usage_pattern,
-			getString(R.string.this_manga),
-			FileSize.BYTES.format(view.context, size),
-		)
-		requireViewBinding().labelAvailable.text = view.context.getString(
-			R.string.memory_usage_pattern,
-			getString(R.string.available),
-			FileSize.BYTES.format(view.context, available),
-		)
-		TextViewCompat.setCompoundDrawableTintList(
-			requireViewBinding().labelUsed,
-			ColorStateList.valueOf(segment.color),
-		)
-		view.animateSegments(listOf(segment))
-	}
+    private fun setSegments(size: Long, available: Long) {
+        val view = viewBinding?.barView ?: return
+        val total = size + available
+        val segment = SegmentedBarView.Segment(
+            percent = (size.toDouble() / total.toDouble()).toFloat(),
+            color = KotatsuColors.segmentColor(view.context, appcompatR.attr.colorPrimary),
+        )
+        requireViewBinding().labelUsed.text = view.context.getString(
+            R.string.memory_usage_pattern,
+            getString(R.string.this_manga),
+            FileSize.BYTES.format(view.context, size),
+        )
+        requireViewBinding().labelAvailable.text = view.context.getString(
+            R.string.memory_usage_pattern,
+            getString(R.string.available),
+            FileSize.BYTES.format(view.context, available),
+        )
+        TextViewCompat.setCompoundDrawableTintList(
+            requireViewBinding().labelUsed,
+            ColorStateList.valueOf(segment.color),
+        )
+        view.animateSegments(listOf(segment))
+    }
 }

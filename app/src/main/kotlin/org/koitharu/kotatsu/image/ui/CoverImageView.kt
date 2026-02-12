@@ -106,7 +106,7 @@ class CoverImageView @JvmOverloads constructor(
 		}
 	}
 
-	private fun isAnimatedUrl(url: String?): Boolean = isAnimatedImage() == true
+	private fun isAnimatedUrl(): Boolean = isAnimatedImage()
 
 	override fun setImageAsync(page: ReaderPage) = enqueueRequest(
 		newRequestBuilder(applyTrim = true)
@@ -123,7 +123,7 @@ class CoverImageView @JvmOverloads constructor(
 	)
 
 	fun setImageAsync(cover: Cover?) = enqueueRequest(
-		newRequestBuilder(applyTrim = !isAnimatedUrl(cover?.url))
+		newRequestBuilder(applyTrim = !isAnimatedUrl())
 			.data(cover?.url)
 			.mangaSourceExtra(cover?.mangaSource)
 			.build(),
@@ -133,7 +133,7 @@ class CoverImageView @JvmOverloads constructor(
 		coverUrl: String?,
 		manga: Manga?,
 	) = enqueueRequest(
-		newRequestBuilder(applyTrim = !isAnimatedUrl(coverUrl))
+		newRequestBuilder(applyTrim = !isAnimatedUrl())
 			.data(coverUrl)
 			.mangaExtra(manga)
 			.build(),
@@ -143,7 +143,7 @@ class CoverImageView @JvmOverloads constructor(
 		coverUrl: String?,
 		source: MangaSource,
 	) = enqueueRequest(
-		newRequestBuilder(applyTrim = !isAnimatedUrl(coverUrl))
+		newRequestBuilder(applyTrim = !isAnimatedUrl())
 			.data(coverUrl)
 			.mangaSourceExtra(source)
 			.build(),

@@ -891,4 +891,7 @@
 	<string name="confirm_password">Confirm Password</string>
 	<string name="password_reset">Password reset successfully</string>
 	<string name="no_reset_token">No reset token provided</string>
+    <string name="branch_s">Branch: %s</string>
+    <string name="downloads_s">Downloads: %s</string>
+    <string name="created_at_s">Creation date: %s</string>
 </resources>

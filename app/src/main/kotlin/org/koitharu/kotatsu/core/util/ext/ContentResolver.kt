@@ -12,7 +12,6 @@ import androidx.core.net.toFile
 import org.koitharu.kotatsu.parsers.util.nullIfEmpty
 import org.koitharu.kotatsu.parsers.util.removeSuffix
 import java.io.File
-import java.lang.reflect.Array as ArrayReflect
 
 private const val PRIMARY_VOLUME_NAME = "primary"
 
@@ -50,38 +49,9 @@ fun ContentResolver.getFileDisplayName(uri: Uri): String? = runCatching {
 }.getOrNull()
 
 private fun getVolumePath(volumeId: String, context: Context): String? {
-	return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-		getVolumePathForAndroid11AndAbove(volumeId, context)
-	} else {
-		getVolumePathBeforeAndroid11(volumeId, context)
-	}
+	return getVolumePathForAndroid11AndAbove(volumeId, context)
 }
 
-
-private fun getVolumePathBeforeAndroid11(volumeId: String, context: Context): String? = runCatching {
-	val mStorageManager = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
-	val storageVolumeClazz = Class.forName("android.os.storage.StorageVolume")
-	val getVolumeList = mStorageManager.javaClass.getMethod("getVolumeList")
-	val getUuid = storageVolumeClazz.getMethod("getUuid")
-	val getPath = storageVolumeClazz.getMethod("getPath")
-	val isPrimary = storageVolumeClazz.getMethod("isPrimary")
-	val result = getVolumeList.invoke(mStorageManager)
-	val length = ArrayReflect.getLength(checkNotNull(result))
-	(0 until length).firstNotNullOfOrNull { i ->
-		val storageVolumeElement = ArrayReflect.get(result, i)
-		val uuid = getUuid.invoke(storageVolumeElement) as String?
-		val primary = isPrimary.invoke(storageVolumeElement) as Boolean
-		when {
-			primary && volumeId == PRIMARY_VOLUME_NAME -> getPath.invoke(storageVolumeElement) as String
-			uuid == volumeId -> getPath.invoke(storageVolumeElement) as String
-			else -> null
-		}
-	}
-}.onFailure {
-	it.printStackTraceDebug()
-}.getOrNull()
-
-@RequiresApi(Build.VERSION_CODES.R)
 private fun getVolumePathForAndroid11AndAbove(volumeId: String, context: Context): String? = runCatching {
 	val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
 	storageManager.storageVolumes.firstNotNullOfOrNull { volume ->

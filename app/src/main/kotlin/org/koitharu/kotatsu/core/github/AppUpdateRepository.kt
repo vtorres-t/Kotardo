@@ -1,6 +1,7 @@
 package org.koitharu.kotatsu.core.github
 
 import android.content.Context
+import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,133 +35,99 @@ class AppUpdateRepository @Inject constructor(
 	@ApplicationContext context: Context,
 ) {
 
-	private val availableUpdate = MutableStateFlow<AppVersion?>(null)
-	private val releasesUrl = buildString {
-		append("https://api.github.com/repos/")
-		append(context.getString(R.string.github_updates_repo))
-		append("/releases?page=1&per_page=10")
-	}
+    private val availableUpdate = MutableStateFlow<AppVersion?>(null)
+    private val releasesUrl = buildString {
+        append("https://api.github.com/repos/")
+        append(context.getString(R.string.github_updates_repo))
+        append("/releases?page=1&per_page=10")
+    }
 
-	val isUpdateAvailable: Boolean
-		get() = availableUpdate.value != null
+    val isUpdateAvailable: Boolean
+        get() = availableUpdate.value != null
 
-	fun observeAvailableUpdate() = availableUpdate.asStateFlow()
+    fun observeAvailableUpdate() = availableUpdate.asStateFlow()
 
-	suspend fun getAvailableVersions(): List<AppVersion> {
-		android.util.Log.d("UPDATE_DEBUG", "=== Getting available versions from: $releasesUrl ===")
-		val request = Request.Builder()
-			.get()
-			.url(releasesUrl)
-		val jsonArray = okHttp.newCall(request.build())
+    suspend fun getAvailableVersions(): List<AppVersion> {
+        val request = Request.Builder()
+            .get()
+            .url(releasesUrl)
+        val jsonArray = okHttp.newCall(request.build())
             .await()
             .parseJsonArray()
         val is64 = android.os.Process.is64Bit()
 
-		android.util.Log.d("UPDATE_DEBUG", "GitHub API returned ${jsonArray.length()} releases")
+        return jsonArray.mapJSONNotNull { json ->
+            val releaseName = json.getString("name")
+            val assets = json.optJSONArray("assets")
+            val asset = assets?.find { jo ->
+                val contentType = jo.optString("content_type")
+                val matches = contentType == CONTENT_TYPE_APK
+                matches
+            }
 
-		return jsonArray.mapJSONNotNull { json ->
-			val releaseName = json.getString("name")
-			val releaseTag = json.getString("tag_name")
-			android.util.Log.d("UPDATE_DEBUG", "Processing release: '$releaseName' (tag: '$releaseTag')")
+            if (asset == null) {
+                Log.d("UPDATE_DEBUG", "  No valid APK asset found for release '$releaseName'")
+                return@mapJSONNotNull null
+            }
 
-			val assets = json.optJSONArray("assets")
-			android.util.Log.d("UPDATE_DEBUG", "  Assets found: ${assets?.length() ?: 0}")
-
-			if (assets != null) {
-				for (i in 0 until assets.length()) {
-					val assetObj = assets.getJSONObject(i)
-					val assetName = assetObj.optString("name", "unknown")
-					val contentType = assetObj.optString("content_type", "unknown")
-					android.util.Log.d("UPDATE_DEBUG", "    Asset $i: '$assetName' (content_type: '$contentType')")
-				}
-			}
-
-			val asset = assets?.find { jo ->
-				val contentType = jo.optString("content_type")
-				val matches = contentType == CONTENT_TYPE_APK
-				android.util.Log.d("UPDATE_DEBUG", "  Checking asset content_type: '$contentType' == '$CONTENT_TYPE_APK' -> $matches")
-				matches
-			}
-
-			if (asset == null) {
-				android.util.Log.d("UPDATE_DEBUG", "  No valid APK asset found for release '$releaseName'")
-				return@mapJSONNotNull null
-			}
-
-			val versionName = releaseTag.removePrefix("v")
-			android.util.Log.d("UPDATE_DEBUG", "  Creating AppVersion: name='$versionName' (from tag='$releaseTag'), versionId=${VersionId(versionName)}")
-
-            val apkUrl = if(is64) asset.getString("browser_download_url").replace("armeabiv7a", "arm64v8") else asset.getString("browser_download_url").replace("arm64v8", "armeabiv7a")
-			AppVersion(
-				id = json.getLong("id"),
-				url = json.getString("html_url"),
+            val apkUrl =
+                if (is64) asset.getString("browser_download_url").replace("armeabiv7a", "arm64v8") else asset.getString(
+                    "browser_download_url"
+                ).replace("arm64v8", "armeabiv7a")
+            AppVersion(
+                id = json.getLong("id"),
+                url = json.getString("html_url"),
+                branch = asset.getString("name").split('_', limit = 3)[1],
+                downloads = asset.getLong("download_count"),
+                createdAt = asset.getString("created_at"),
                 name = json.getString("name").splitTwoParts('v')?.second ?: "",
-				apkSize = asset.getLong("size"),
-				apkUrl = apkUrl,
-				description = json.getString("body"),
-			)
-		}
-	}
+                apkSize = asset.getLong("size"),
+                apkUrl = apkUrl,
+                description = json.getString("body"),
+            )
+        }
+    }
 
-	suspend fun fetchUpdate(): AppVersion? = withContext(Dispatchers.Default) {
-		android.util.Log.d("UPDATE_DEBUG", "=== Starting fetchUpdate ===")
+    suspend fun fetchUpdate(): AppVersion? = withContext(Dispatchers.Default) {
+        if (!isUpdateSupported()) {
+            Log.d("UPDATE_DEBUG", "Update not supported, returning null")
+            return@withContext null
+        }
+        runCatchingCancellable {
+            val currentVersion = VersionId(BuildConfig.VERSION_NAME)
 
-		if (!isUpdateSupported()) {
-			android.util.Log.d("UPDATE_DEBUG", "Update not supported, returning null")
-			return@withContext null
-		}
-		android.util.Log.d("UPDATE_DEBUG", "Update is supported, proceeding...")
+            val available = getAvailableVersions().asArrayList()
+            available.sortBy { it.versionId }
 
-		runCatchingCancellable {
-			val currentVersion = VersionId(BuildConfig.VERSION_NAME)
-			android.util.Log.d("UPDATE_DEBUG", "Current version: ${BuildConfig.VERSION_NAME} -> $currentVersion")
+            if (currentVersion.isStable) {
+                available.retainAll { it.versionId.isStable }
+            }
 
-			val available = getAvailableVersions().asArrayList()
-			android.util.Log.d("UPDATE_DEBUG", "Found ${available.size} available versions:")
-			available.forEach { version ->
-				android.util.Log.d("UPDATE_DEBUG", "  - ${version.name} -> ${version.versionId} (stable: ${version.versionId.isStable})")
-			}
+            val maxVersion = available.maxByOrNull { it.versionId }
+            val result = maxVersion?.takeIf { it.versionId > currentVersion }
 
-			available.sortBy { it.versionId }
-			android.util.Log.d("UPDATE_DEBUG", "After sorting by version:")
-			available.forEach { version ->
-				android.util.Log.d("UPDATE_DEBUG", "  - ${version.name} -> ${version.versionId}")
-			}
-
-			if (currentVersion.isStable) {
-				val beforeFiltering = available.size
-				available.retainAll { it.versionId.isStable }
-				android.util.Log.d("UPDATE_DEBUG", "Filtered unstable versions: $beforeFiltering -> ${available.size}")
-			}
-
-			val maxVersion = available.maxByOrNull { it.versionId }
-			android.util.Log.d("UPDATE_DEBUG", "Max available version: ${maxVersion?.name} -> ${maxVersion?.versionId}")
-
-			val result = maxVersion?.takeIf { it.versionId > currentVersion }
-			android.util.Log.d("UPDATE_DEBUG", "Update result: ${result?.name} (${result?.versionId} > $currentVersion = ${result?.versionId?.let { it > currentVersion }})")
-
-			result
-		}.onFailure {
-			android.util.Log.e("UPDATE_DEBUG", "Error during update check", it)
-			it.printStackTraceDebug()
-		}.onSuccess {
-			android.util.Log.d("UPDATE_DEBUG", "Setting availableUpdate to: ${it?.name}")
-			availableUpdate.value = it
-		}.getOrNull()
-	}
+            result
+        }.onFailure {
+            Log.e("UPDATE_DEBUG", "Error during update check", it)
+            it.printStackTraceDebug()
+        }.onSuccess {
+            Log.d("UPDATE_DEBUG", "Setting availableUpdate to: ${it?.name}")
+            availableUpdate.value = it
+        }.getOrNull()
+    }
 
     suspend fun isUpdateSupported(): Boolean {
-		return appValidator.isOriginalApp.getOrNull() == true
-	}
+        return appValidator.isOriginalApp.getOrNull() == true
+    }
 
-	private inline fun JSONArray.find(predicate: (JSONObject) -> Boolean): JSONObject? {
-		val size = length()
-		for (i in 0 until size) {
-			val jo = getJSONObject(i)
-			if (predicate(jo)) {
-				return jo
-			}
-		}
-		return null
-	}
+    private inline fun JSONArray.find(predicate: (JSONObject) -> Boolean): JSONObject? {
+        val size = length()
+        for (i in 0 until size) {
+            val jo = getJSONObject(i)
+            if (predicate(jo)) {
+                return jo
+            }
+        }
+        return null
+    }
 }

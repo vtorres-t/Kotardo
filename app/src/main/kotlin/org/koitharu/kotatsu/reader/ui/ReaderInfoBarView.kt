@@ -12,7 +12,6 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.BatteryManager
-import android.os.Build
 import android.util.AttributeSet
 import android.view.RoundedCorner
 import android.view.View
@@ -74,9 +73,6 @@ class ReaderInfoBarView @JvmOverloads constructor(
 
 	private val innerHeight
 		get() = height - paddingTop - paddingBottom - insetTop
-
-	private val innerWidth
-		get() = width - paddingLeft - paddingRight - insetLeft - insetRight
 
 	var drawBackground: Boolean = false
 		set(value) {
@@ -269,7 +265,7 @@ class ReaderInfoBarView @JvmOverloads constructor(
 		insetLeft = insetLeftFallback
 		insetRight = insetRightFallback
 		insetTop = insetTopFallback
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && insetsCompat != null) {
+		if (insetsCompat != null) {
 			val nativeInsets = insetsCompat.toWindowInsets()
 			nativeInsets?.getRoundedCorner(RoundedCorner.POSITION_TOP_LEFT)?.let { corner ->
 				insetLeft += corner.radius

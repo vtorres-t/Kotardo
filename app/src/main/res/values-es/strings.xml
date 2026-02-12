@@ -827,4 +827,7 @@
     <string name="enable_pull_gesture_summary">Usa el gesto de arrastrar para cambiar de capítulo en webtoon</string>
     <string name="disable_broken_sources">Desactivar fuentes rotas</string>
     <string name="delete_all_chapters">Borrar todos los capítulos</string>
+    <string name="branch_s">Rama: %s</string>
+    <string name="downloads_s">Descargas: %s</string>
+    <string name="created_at_s">Fecha creación: %s</string>
 </resources>

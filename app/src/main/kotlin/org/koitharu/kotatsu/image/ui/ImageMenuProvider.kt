@@ -1,7 +1,5 @@
 package org.koitharu.kotatsu.image.ui
 
-import android.Manifest
-import android.os.Build
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -42,14 +40,9 @@ class ImageMenuProvider(
 
 	override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
 		R.id.action_save -> {
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-				permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-			} else {
-				saveImage()
-			}
-			true
-		}
-
+            saveImage()
+            true
+        }
 		else -> false
 	}
 

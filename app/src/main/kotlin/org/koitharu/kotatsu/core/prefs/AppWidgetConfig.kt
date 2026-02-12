@@ -2,7 +2,6 @@ package org.koitharu.kotatsu.core.prefs
 
 import android.appwidget.AppWidgetProvider
 import android.content.Context
-import android.os.Build
 import androidx.core.content.edit
 
 private const val CATEGORY_ID = "cat_id"
@@ -21,7 +20,7 @@ class AppWidgetConfig(
 		set(value) = prefs.edit { putLong(CATEGORY_ID, value) }
 
 	var hasBackground: Boolean
-		get() = prefs.getBoolean(BACKGROUND, Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+		get() = prefs.getBoolean(BACKGROUND, true)
 		set(value) = prefs.edit { putBoolean(BACKGROUND, value) }
 
 	fun clear() {

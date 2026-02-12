@@ -16,6 +16,7 @@ import java.util.EnumSet
  This class is for parser development and testing purposes
  You can open it in the app via Settings -> Debug
  */
+@OptIn(org.koitharu.kotatsu.parsers.InternalParsersApi::class)
 class TestMangaRepository(
 	@Suppress("unused") private val loaderContext: MangaLoaderContext,
 	cache: MemoryContentCache

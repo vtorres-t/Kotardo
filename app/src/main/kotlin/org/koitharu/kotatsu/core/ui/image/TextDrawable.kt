@@ -8,10 +8,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.Rect
-import android.os.Build
 import android.widget.TextView
 import androidx.annotation.AttrRes
-import androidx.annotation.RequiresApi
 import androidx.core.graphics.PaintCompat
 import com.google.android.material.resources.TextAppearance
 import org.koitharu.kotatsu.core.util.ext.getThemeResId
@@ -60,7 +58,6 @@ class TextDrawable(
 
 	override fun isStateful(): Boolean = textColor.isStateful
 
-	@RequiresApi(Build.VERSION_CODES.S)
 	override fun hasFocusStateSpecified(): Boolean = textColor.hasFocusStateSpecified()
 
 	override fun onStateChange(state: IntArray): Boolean {

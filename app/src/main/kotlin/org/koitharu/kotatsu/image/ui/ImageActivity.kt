@@ -124,8 +124,7 @@ class ImageActivity : BaseActivity<ActivityImageBinding>(),
 	}
 
 	private fun loadImage() {
-		val url = intent.data?.toString()
-		val isAnimated = isAnimatedImage() == true
+		val isAnimated = isAnimatedImage()
 
 		if (isAnimated) {
 			viewBinding.ssiv.isVisible = false

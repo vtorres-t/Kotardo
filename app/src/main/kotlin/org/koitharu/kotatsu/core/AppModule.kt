@@ -2,7 +2,6 @@ package org.koitharu.kotatsu.core
 
 import android.app.Application
 import android.content.Context
-import android.os.Build
 import android.provider.SearchRecentSuggestions
 import android.text.Html
 import androidx.collection.arraySetOf
@@ -13,7 +12,6 @@ import coil3.ImageLoader
 import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.gif.AnimatedImageDecoder
-import coil3.gif.GifDecoder
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.allowRgb565
 import coil3.svg.SvgDecoder
@@ -110,44 +108,40 @@ interface AppModule {
 			networkStateProvider: Provider<NetworkState>,
 			captchaHandler: CaptchaHandler,
 		): ImageLoader {
-			val diskCacheFactory = {
-				val rootDir = context.externalCacheDir ?: context.cacheDir
-				DiskCache.Builder()
-					.directory(rootDir.resolve(CacheDir.THUMBS.dir))
-					.build()
-			}
-			val okHttpClientLazy = lazy {
-				okHttpClientProvider.get().newBuilder().cache(null).build()
-			}
-			return ImageLoader.Builder(context)
-				.interceptorCoroutineContext(Dispatchers.Default)
-				.diskCache(diskCacheFactory)
-				.logger(if (BuildConfig.DEBUG) DebugLogger() else null)
-				.allowRgb565(context.isLowRamDevice())
-				.eventListener(captchaHandler)
-				.components {
-					add(
-						OkHttpNetworkFetcherFactory(
-							callFactory = okHttpClientLazy::value,
-							connectivityChecker = { networkStateProvider.get() },
-						),
-					)
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-						add(AnimatedImageDecoder.Factory())
-					} else {
-						add(GifDecoder.Factory())
-					}
-					add(SvgDecoder.Factory())
-					add(CbzFetcher.Factory())
-					add(AvifImageDecoder.Factory())
-					add(faviconFetcherFactory)
-					add(MangaPageKeyer())
-					add(pageFetcherFactory)
-					add(imageProxyInterceptor)
-					add(coverRestoreInterceptor)
-					add(MangaSourceHeaderInterceptor())
-				}.build()
-		}
+            val diskCacheFactory = {
+                val rootDir = context.externalCacheDir ?: context.cacheDir
+                DiskCache.Builder()
+                    .directory(rootDir.resolve(CacheDir.THUMBS.dir))
+                    .build()
+            }
+            val okHttpClientLazy = lazy {
+                okHttpClientProvider.get().newBuilder().cache(null).build()
+            }
+            return ImageLoader.Builder(context)
+                .interceptorCoroutineContext(Dispatchers.Default)
+                .diskCache(diskCacheFactory)
+                .logger(if (BuildConfig.DEBUG) DebugLogger() else null)
+                .allowRgb565(context.isLowRamDevice())
+                .eventListener(captchaHandler)
+                .components {
+                    add(
+                        OkHttpNetworkFetcherFactory(
+                            callFactory = okHttpClientLazy::value,
+                            connectivityChecker = { networkStateProvider.get() },
+                        ),
+                    )
+                    add(AnimatedImageDecoder.Factory())
+                    add(SvgDecoder.Factory())
+                    add(CbzFetcher.Factory())
+                    add(AvifImageDecoder.Factory())
+                    add(faviconFetcherFactory)
+                    add(MangaPageKeyer())
+                    add(pageFetcherFactory)
+                    add(imageProxyInterceptor)
+                    add(coverRestoreInterceptor)
+                    add(MangaSourceHeaderInterceptor())
+                }.build()
+        }
 
 		@Provides
 		fun provideSearchSuggestions(

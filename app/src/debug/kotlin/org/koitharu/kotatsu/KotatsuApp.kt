@@ -31,54 +31,49 @@ class KotatsuApp : BaseApp() {
 	}
 
 	private fun enableStrictMode() {
-		val notifier = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-			StrictModeNotifier(this)
-		} else {
-			null
-		}
-		StrictMode.setThreadPolicy(
-			StrictMode.ThreadPolicy.Builder().apply {
-				detectNetwork()
-				detectDiskWrites()
-				detectCustomSlowCalls()
-				detectResourceMismatches()
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) detectUnbufferedIo()
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) detectExplicitGc()
-				penaltyLog()
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && notifier != null) {
-					penaltyListener(notifier.executor, notifier)
-				}
-			}.build(),
-		)
-		StrictMode.setVmPolicy(
-			StrictMode.VmPolicy.Builder().apply {
-				detectActivityLeaks()
-				detectLeakedSqlLiteObjects()
-				detectLeakedClosableObjects()
-				detectLeakedRegistrationObjects()
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-					detectContentUriWithoutPermission()
-				}
-				detectFileUriExposure()
-				penaltyLog()
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && notifier != null) {
-					penaltyListener(notifier.executor, notifier)
-				}
-			}.build(),
-		)
-		FragmentStrictMode.defaultPolicy = FragmentStrictMode.Policy.Builder().apply {
-			detectWrongFragmentContainer()
-			detectFragmentTagUsage()
-			detectRetainInstanceUsage()
-			detectSetUserVisibleHint()
-			detectWrongNestedHierarchy()
-			detectFragmentReuse()
-			penaltyLog()
-			if (notifier != null) {
-				penaltyListener(notifier)
-			}
-		}.build()
-	}
+        val notifier = StrictModeNotifier(this)
+
+        StrictMode.setThreadPolicy(
+            StrictMode.ThreadPolicy.Builder().apply {
+                detectNetwork()
+                detectDiskWrites()
+                detectCustomSlowCalls()
+                detectResourceMismatches()
+                detectUnbufferedIo()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) detectExplicitGc()
+                penaltyLog()
+                if (notifier != null) {
+                    penaltyListener(notifier.executor, notifier)
+                }
+            }.build(),
+        )
+        StrictMode.setVmPolicy(
+            StrictMode.VmPolicy.Builder().apply {
+                detectActivityLeaks()
+                detectLeakedSqlLiteObjects()
+                detectLeakedClosableObjects()
+                detectLeakedRegistrationObjects()
+                detectContentUriWithoutPermission()
+                detectFileUriExposure()
+                penaltyLog()
+                if (notifier != null) {
+                    penaltyListener(notifier.executor, notifier)
+                }
+            }.build(),
+        )
+        FragmentStrictMode.defaultPolicy = FragmentStrictMode.Policy.Builder().apply {
+            detectWrongFragmentContainer()
+            detectFragmentTagUsage()
+            detectRetainInstanceUsage()
+            detectSetUserVisibleHint()
+            detectWrongNestedHierarchy()
+            detectFragmentReuse()
+            penaltyLog()
+            if (notifier != null) {
+                penaltyListener(notifier)
+            }
+        }.build()
+    }
 
 	private companion object {
 

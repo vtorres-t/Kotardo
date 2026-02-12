@@ -3,7 +3,6 @@ package org.koitharu.kotatsu.explore.ui
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -249,12 +248,8 @@ class ExploreFragment :
 
 	private fun uninstallExternalSource(source: ExternalMangaSource) {
 		val uri = Uri.fromParts("package", source.packageName, null)
-		val action = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-			Intent.ACTION_DELETE
-		} else {
-			@Suppress("DEPRECATION")
-			Intent.ACTION_UNINSTALL_PACKAGE
-		}
+		val action = Intent.ACTION_DELETE
+
 		context?.startActivity(Intent(action, uri))
 	}
 }

@@ -5,7 +5,6 @@ import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.net.Uri
-import android.os.Build
 import coil3.ColorImage
 import coil3.ImageLoader
 import coil3.asImage
@@ -184,7 +183,7 @@ class FaviconFetcher(
 		}
 
 		private fun Drawable.nonAdaptive() =
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && this is AdaptiveIconDrawable) {
+			if (this is AdaptiveIconDrawable) {
 				LayerDrawable(arrayOf(background, foreground))
 			} else {
 				this

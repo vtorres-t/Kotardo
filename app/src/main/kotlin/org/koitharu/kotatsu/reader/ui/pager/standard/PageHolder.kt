@@ -2,14 +2,12 @@ package org.koitharu.kotatsu.reader.ui.pager.standard
 
 import android.annotation.SuppressLint
 import android.graphics.PointF
-import android.os.Build
 import android.view.Gravity
 import android.view.RoundedCorner
 import android.view.View
 import android.view.WindowInsets
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
-import androidx.annotation.RequiresApi
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -55,13 +53,11 @@ open class PageHolder(
 		v: View,
 		insets: WindowInsetsCompat
 	): WindowInsetsCompat {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-			insets.toWindowInsets()?.let {
-				applyRoundedCorners(it)
-			}
-		}
-		return insets
-	}
+        insets.toWindowInsets()?.let {
+            applyRoundedCorners(it)
+        }
+        return insets
+    }
 
 	override fun onConfigChanged(settings: ReaderSettings) {
 		super.onConfigChanged(settings)
@@ -123,7 +119,6 @@ open class PageHolder(
 	}
 
 	@SuppressLint("RtlHardcoded")
-	@RequiresApi(Build.VERSION_CODES.S)
 	protected open fun applyRoundedCorners(insets: WindowInsets) {
 		binding.textViewNumber.updateLayoutParams<FrameLayout.LayoutParams> {
 			val baseMargin = context.resources.getDimensionPixelOffset(R.dimen.margin_small)

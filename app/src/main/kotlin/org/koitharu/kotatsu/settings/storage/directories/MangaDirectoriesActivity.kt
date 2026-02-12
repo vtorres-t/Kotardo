@@ -2,11 +2,9 @@ package org.koitharu.kotatsu.settings.storage.directories
 
 import android.Manifest
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -42,11 +40,7 @@ class MangaDirectoriesActivity : BaseActivity<ActivityMangaDirectoriesBinding>()
 		if (it != null) viewModel.onCustomDirectoryPicked(it)
 	}
 	private val permissionRequestLauncher = registerForActivityResult(
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-			RequestStorageManagerPermissionContract()
-		} else {
-			ActivityResultContracts.RequestPermission()
-		},
+        RequestStorageManagerPermissionContract(),
 	) {
 		if (it) {
 			viewModel.updateList()
@@ -59,27 +53,26 @@ class MangaDirectoriesActivity : BaseActivity<ActivityMangaDirectoriesBinding>()
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(ActivityMangaDirectoriesBinding.inflate(layoutInflater))
-		setDisplayHomeAsUp(isEnabled = true, showUpAsClose = false)
-		val adapter = AsyncListDifferDelegationAdapter(DirectoryConfigDiffCallback(), directoryConfigAD(this))
+        super.onCreate(savedInstanceState)
+        setContentView(ActivityMangaDirectoriesBinding.inflate(layoutInflater))
+        setDisplayHomeAsUp(isEnabled = true, showUpAsClose = false)
+        val adapter = AsyncListDifferDelegationAdapter(DirectoryConfigDiffCallback(), directoryConfigAD(this))
         val spacing = resources.getDimensionPixelOffset(R.dimen.list_spacing_large)
         viewBinding.recyclerView.adapter = adapter
         viewBinding.recyclerView.addItemDecoration(SpacingItemDecoration(spacing, withBottomPadding = false))
         viewBinding.fabAdd.setOnClickListener(this)
 
         viewModel.items.observe(this) { adapter.items = it }
-
-		viewModel.isLoading.observe(this) {
+        viewModel.isLoading.observe(this) {
             viewBinding.progressBar.isVisible = it
         }
-		viewModel.onError.observeEvent(
-			this,
-			SnackbarErrorObserver(viewBinding.root, null, exceptionResolver) {
-				if (it) viewModel.updateList()
-			},
-		)
-	}
+        viewModel.onError.observeEvent(
+            this,
+            SnackbarErrorObserver(viewBinding.root, null, exceptionResolver) {
+                if (it) viewModel.updateList()
+            },
+        )
+    }
 
 	override fun onItemClick(item: DirectoryConfigModel, view: View) {
 		viewModel.onRemoveClick(item.path)
