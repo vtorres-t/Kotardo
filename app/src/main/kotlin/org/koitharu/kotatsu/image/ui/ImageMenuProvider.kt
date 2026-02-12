@@ -18,15 +18,7 @@ class ImageMenuProvider(
 	private val viewModel: ImageViewModel,
 ) : MenuProvider {
 
-	private val permissionLauncher = activity.registerForActivityResult(
-		ActivityResultContracts.RequestPermission(),
-	) { isGranted ->
-		if (isGranted) {
-			saveImage()
-		}
-	}
-
-	private val saveLauncher = activity.registerForActivityResult(
+    private val saveLauncher = activity.registerForActivityResult(
 		ActivityResultContracts.CreateDocument("image/png"),
 	) { uri ->
 		if (uri != null) {

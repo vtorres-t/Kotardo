@@ -3,11 +3,9 @@ package org.koitharu.kotatsu.core.util.ext
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import android.os.Build
 import android.os.storage.StorageManager
 import android.provider.DocumentsContract
 import android.provider.OpenableColumns
-import androidx.annotation.RequiresApi
 import androidx.core.net.toFile
 import org.koitharu.kotatsu.parsers.util.nullIfEmpty
 import org.koitharu.kotatsu.parsers.util.removeSuffix

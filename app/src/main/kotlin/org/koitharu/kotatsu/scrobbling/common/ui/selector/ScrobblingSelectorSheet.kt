@@ -24,7 +24,6 @@ import org.koitharu.kotatsu.core.ui.sheet.BaseAdaptiveSheet
 import org.koitharu.kotatsu.core.ui.util.CollapseActionViewCallback
 import org.koitharu.kotatsu.core.util.RecyclerViewScrollCallback
 import org.koitharu.kotatsu.core.util.ext.consume
-import org.koitharu.kotatsu.core.util.ext.firstVisibleItemPosition
 import org.koitharu.kotatsu.core.util.ext.getDisplayMessage
 import org.koitharu.kotatsu.core.util.ext.observe
 import org.koitharu.kotatsu.core.util.ext.observeEvent
