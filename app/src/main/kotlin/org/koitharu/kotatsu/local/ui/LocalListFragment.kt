@@ -1,13 +1,11 @@
 package org.koitharu.kotatsu.local.ui
 
 import android.Manifest
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.view.ActionMode
 import androidx.core.net.toFile
 import androidx.core.net.toUri
@@ -33,11 +31,7 @@ import org.koitharu.kotatsu.settings.storage.RequestStorageManagerPermissionCont
 class LocalListFragment : MangaListFragment(), FilterCoordinator.Owner {
 
 	private val permissionRequestLauncher = registerForActivityResult(
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-			RequestStorageManagerPermissionContract()
-		} else {
-			ActivityResultContracts.RequestPermission()
-		},
+        RequestStorageManagerPermissionContract(),
 	) {
 		if (it) {
 			viewModel.onRefresh()

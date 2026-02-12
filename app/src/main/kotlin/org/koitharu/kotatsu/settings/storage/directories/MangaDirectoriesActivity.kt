@@ -2,11 +2,9 @@ package org.koitharu.kotatsu.settings.storage.directories
 
 import android.Manifest
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -42,11 +40,7 @@ class MangaDirectoriesActivity : BaseActivity<ActivityMangaDirectoriesBinding>()
 		if (it != null) viewModel.onCustomDirectoryPicked(it)
 	}
 	private val permissionRequestLauncher = registerForActivityResult(
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-			RequestStorageManagerPermissionContract()
-		} else {
-			ActivityResultContracts.RequestPermission()
-		},
+        RequestStorageManagerPermissionContract(),
 	) {
 		if (it) {
 			viewModel.updateList()
