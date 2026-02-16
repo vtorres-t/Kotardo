@@ -12,7 +12,6 @@
 	<string name="kitsu_clientSecret" translatable="false">54d7307928f63414defd96399fc31ba847961ceaecef3a5fd93144e960c0e151</string>
     <string name="sync_authority_favourites">io.github.kotatsu.kotatsu.favourites</string>
     <string name="sync_authority_history">io.github.kotatsu.kotatsu.history</string>
-	<string name="app_icon_url" translatable="false">https://raw.githubusercontent.com/vtorres-t/Kotardo/refs/heads/devel/icon.png</string>
 	<string-array name="values_theme" translatable="false">
 		<item>-1</item>
 		<item>1</item>

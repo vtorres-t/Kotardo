@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="ThemeOverlay.Kotatsu" parent="ThemeOverlay.Material3.Dark">
+		<item name="android:navigationBarColor">@android:color/transparent</item>
+		<item name="android:windowBackground">?android:colorBackground</item>
+	</style>
+
+	<style name="ThemeOverlay.Kotatsu.Amoled" parent="">
+		<item name="colorSurface">@color/background_amoled</item>
+		<item name="android:colorBackground">@color/background_amoled</item>
+		<item name="android:windowBackground">@color/background_amoled</item>
+		<item name="colorBackgroundFloating">@color/background_amoled</item>
+	</style>
+
+	<!-- Monet theme only support S+ -->
+	<style name="ThemeOverlay.Kotatsu.Monet" parent="ThemeOverlay.Material3.DynamicColors.Dark" />
+
+    <style name="Base.V31.Kotatsu" parent="Base.Theme.Kotatsu">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/avd_splash</item>
+        <item name="android:windowSplashScreenAnimationDuration">@integer/splash_screen_duration</item>
+        <item name="android:windowSplashScreenBackground">@color/m3_sys_color_dynamic_dark_surface</item>
+    </style>
+
+    <style name="Theme.Kotatsu.AppWidgetContainer" parent="@android:style/Theme.DeviceDefault.DayNight">
+        <item name="android:colorBackground">@color/m3_ref_palette_dynamic_secondary20</item>
+        <item name="android:panelColorBackground">@color/m3_ref_palette_dynamic_secondary40</item>
+        <item name="colorTertiary">@color/m3_ref_palette_dynamic_secondary40</item>
+    </style>
+
+</resources>
