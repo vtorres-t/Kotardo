@@ -125,12 +125,4 @@ class RequestInterceptorWebViewClient(
         }
     }
 
-    /**
-     * Get currently captured requests (thread-safe)
-     */
-    fun getCapturedRequests(): List<InterceptedRequest> {
-        return synchronized(capturedRequests) {
-            capturedRequests.toList()
-        }
-    }
 }

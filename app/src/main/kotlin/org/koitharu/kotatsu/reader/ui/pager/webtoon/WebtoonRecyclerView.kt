@@ -146,11 +146,7 @@ class WebtoonRecyclerView @JvmOverloads constructor(
 		onPageScrollListeners.add(listener)
 	}
 
-	fun removeOnPageScrollListener(listener: OnWebtoonScrollListener) {
-		onPageScrollListeners.remove(listener)
-	}
-
-	private fun notifyScrollChanged(dy: Int) {
+    private fun notifyScrollChanged(dy: Int) {
 		val listeners = onPageScrollListeners
 		if (listeners.isEmpty()) {
 			return
