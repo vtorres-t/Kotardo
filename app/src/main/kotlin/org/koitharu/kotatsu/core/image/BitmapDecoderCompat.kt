@@ -4,8 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.BitmapRegionDecoder
 import android.graphics.ImageDecoder
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.graphics.createBitmap
 import com.davemorrissey.labs.subscaleview.decoder.ImageDecodeException
 import okio.IOException
@@ -71,10 +69,7 @@ object BitmapDecoderCompat {
 		options.outMimeType?.toMimeTypeOrNull()
 	}.getOrNull()
 
-	private fun checkBitmapNotNull(bitmap: Bitmap?, format: String?): Bitmap =
-		bitmap ?: throw ImageDecodeException(null, format)
-
-	private fun decodeAvif(bytes: ByteBuffer): Bitmap {
+    private fun decodeAvif(bytes: ByteBuffer): Bitmap {
 		val info = Info()
 		if (!AvifDecoder.getInfo(bytes, bytes.remaining(), info)) {
 			throw ImageDecodeException(

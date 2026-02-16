@@ -16,11 +16,7 @@ class SpanSizeResolver(
 		recyclerView.addOnLayoutChangeListener(this)
 	}
 
-	fun detach() {
-		recyclerView.removeOnLayoutChangeListener(this)
-	}
-
-	override fun onLayoutChange(
+    override fun onLayoutChange(
 		v: View?,
 		left: Int,
 		top: Int,

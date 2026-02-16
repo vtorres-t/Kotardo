@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.style.URLSpan
@@ -92,7 +91,7 @@ class TrackerSettingsFragment :
 	override fun onPreferenceTreeClick(preference: Preference): Boolean {
 		return when (preference.key) {
 			AppSettings.KEY_NOTIFICATIONS_SETTINGS -> when {
-				Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+				true -> {
 					val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
 						.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
 					startActivitySafe(intent)

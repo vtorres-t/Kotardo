@@ -13,8 +13,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -59,13 +57,7 @@ abstract class BaseViewModel : ViewModel() {
 		}
 	}
 
-	protected fun <T> Flow<T>.withLoading() = onStart {
-		loadingCounter.increment()
-	}.onCompletion {
-		loadingCounter.decrement()
-	}
-
-	protected fun <T> Flow<T>.withErrorHandling() = catch { error ->
+    protected fun <T> Flow<T>.withErrorHandling() = catch { error ->
 		error.printStackTraceDebug()
 		errorEvent.call(error)
 	}

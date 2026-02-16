@@ -204,12 +204,6 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 			?: Settings.System.DEFAULT_NOTIFICATION_URI
 		set(value) = prefs.edit { putString(KEY_NOTIFICATIONS_SOUND, value.toString()) }
 
-	val notificationVibrate: Boolean
-		get() = prefs.getBoolean(KEY_NOTIFICATIONS_VIBRATE, false)
-
-	val notificationLight: Boolean
-		get() = prefs.getBoolean(KEY_NOTIFICATIONS_LIGHT, true)
-
 	val readerAnimation: ReaderAnimation
 		get() = prefs.getEnumValue(KEY_READER_ANIMATION, ReaderAnimation.DEFAULT)
 
@@ -675,8 +669,6 @@ class AppSettings @Inject constructor(@ApplicationContext context: Context) {
 		const val KEY_TRACKER_DOWNLOAD = "tracker_download"
 		const val KEY_NOTIFICATIONS_SETTINGS = "notifications_settings"
 		const val KEY_NOTIFICATIONS_SOUND = "notifications_sound"
-		const val KEY_NOTIFICATIONS_VIBRATE = "notifications_vibrate"
-		const val KEY_NOTIFICATIONS_LIGHT = "notifications_light"
 		const val KEY_NOTIFICATIONS_INFO = "tracker_notifications_info"
 		const val KEY_READER_ANIMATION = "reader_animation2"
 		const val KEY_READER_CONTROLS = "reader_controls"

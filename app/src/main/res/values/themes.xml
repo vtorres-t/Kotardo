@@ -77,7 +77,13 @@
 	</style>
 
 	<!--== Default Theme ==-->
-	<style name="Theme.Kotatsu" parent="Base.Theme.Kotatsu" />
+	<style name="Theme.Kotatsu" parent="Base.Theme.Kotatsu">
+        <item name="android:windowLightNavigationBar">@bool/light_navigation_bar</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/avd_splash</item>
+        <item name="android:windowSplashScreenAnimationDuration">@integer/splash_screen_duration</item>
+        <item name="android:windowSplashScreenBackground">@color/m3_sys_color_dynamic_light_surface</item>
+    </style>
 
 	<!-- Base ThemeOverlay -->
 	<style name="ThemeOverlay.Kotatsu" parent="ThemeOverlay.Material3.Light" />
@@ -153,7 +159,8 @@
 	<!-- App Widgets -->
 
 	<style name="Theme.Kotatsu.AppWidgetContainer" parent="@style/Theme.MaterialComponents.Light">
-		<item name="android:colorBackground">@color/kotatsu_background</item>
-		<item name="android:panelColorBackground">@color/kotatsu_primaryContainer</item>
+        <item name="android:colorBackground">@color/m3_ref_palette_dynamic_secondary95</item>
+        <item name="android:panelColorBackground">@color/m3_ref_palette_dynamic_secondary90</item>
+        <item name="colorTertiary">@color/m3_ref_palette_dynamic_secondary70</item>
 	</style>
 </resources>
