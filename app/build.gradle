@@ -1,7 +1,8 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.time.LocalDateTime
 
 plugins {
 	id 'com.android.application'
+	id 'kotlin-android'
 	id 'com.google.devtools.ksp'
 	id 'kotlin-parcelize'
 	id 'dagger.hilt.android.plugin'
@@ -26,7 +27,7 @@ android {
 		minSdk = 31
 		targetSdk = 36
 		versionCode = 1047
-		versionName = '9.6.4'
+		versionName = '9.6.6'
 		generatedDensities = []
 		testInstrumentationRunner 'org.koitharu.kotatsu.HiltTestRunner'
 		ksp {
