@@ -127,6 +127,11 @@ dependencies {
 	implementation("com.github.vtorres-t:kotardo-parsers:$parsersVersion") {
 		exclude group: 'org.json', module: 'json'
 	}
+    def ssivVersion = libs.versions.ssiv.get()
+    if (System.properties.containsKey('ssivVersionOverride')) {
+        ssivVersion = System.getProperty('ssivVersionOverride')
+    }
+    implementation("com.github.vtorres-t:subsampling-scale-image-view:$ssivVersion")
 
 	coreLibraryDesugaring libs.desugar.jdk.libs
 	implementation libs.kotlin.stdlib
@@ -182,7 +187,6 @@ dependencies {
 	implementation libs.coil.gif
 	implementation libs.coil.svg
 	implementation libs.avif.decoder
-	implementation libs.ssiv
 	implementation libs.disk.lru.cache
 	implementation libs.markwon
 
