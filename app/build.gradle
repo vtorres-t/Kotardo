@@ -2,7 +2,6 @@ import java.time.LocalDateTime
 
 plugins {
 	id 'com.android.application'
-	id 'kotlin-android'
 	id 'com.google.devtools.ksp'
 	id 'kotlin-parcelize'
 	id 'dagger.hilt.android.plugin'
